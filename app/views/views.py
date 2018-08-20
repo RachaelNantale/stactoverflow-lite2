@@ -5,7 +5,7 @@ from app.models.models import QuestionsModels
 bp = Blueprint('app', __name__)
 api = Api(bp)
 
-QUESTIONS = []
+Questions = []
 
 
 class QuestionsList(Resource):
@@ -24,21 +24,23 @@ class QuestionsList(Resource):
         super(QuestionsList, self).__init__()
 
     def post(self):
-        qtn_id = len(QUESTIONS)
+        qtn_id = len(Questions)
         qtn_id += 1
         args = self.reqparse.parse_args()
         question = QuestionsModels(args['title'], args['body'],
                                    args['tags'], qtn_id)
-        QUESTIONS.append(question)
+        Questions.append(question)
         return make_response(jsonify({
             'question': question.__dict__,
-            'message': 'Question Created',
-            'status': 'success'
         }), 201)
 
     def get(self):
-        question_rides = [question.__dict__ for question in QUESTIONS]
-        return make_response(jsonify(question_rides), 200)
+        questions = [question.__dict__ for question in Questions]
+        if len(questions) == 0:
+            return make_response(jsonify(
+                {'message': 'Sorry no questions asked yet'}
+            ))
+        return make_response(jsonify(questions), 200)
 
 
 class Question(Resource):
@@ -57,7 +59,11 @@ class Question(Resource):
 
     def get(self, qtn_id):
         question = [
-            question.__dict__ for question in QUESTIONS if question.qtn_id == qtn_id]
+            question.__dict__ for question in Questions if question.qtn_id == qtn_id]
+        if len(question) == 0:
+            return make_response(jsonify(
+                {'message': 'Sorry no questions asked yet'}
+            ))
         return make_response(jsonify(question), 200)
 
 
