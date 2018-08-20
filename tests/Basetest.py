@@ -9,8 +9,6 @@ class BaseTest(unittest.TestCase):
         self.app = create_app(TestingConfig)
         self.client = self.app.test_client()
 
-        
-
     def tearDown(self):
         pass
 
