@@ -44,18 +44,17 @@ class TestAll(BaseTest):
         res = self.client.get('api/v1/questions/2',
                               content_type='application/json')
         self.assertEqual(res.status_code, 200)
-        
 
     def test_answer_class_initializer(self):
         """ Test  Answer Class model"""
         answermodel = AnswersModels('this is a sample question')
         self.assertIsInstance(answermodel, AnswersModels)
 
-    def test_get_single_question(self):
-        """Test Method for Single Question"""
-        single_qtn = get_single_question(self.question['qtn_id'])
-        print(single_qtn)
-        self.assertTrue(single_qtn['title'], 'What is json?')
+    # def test_get_single_question(self):
+    #     """Test Method for Single Question"""
+    #     single_qtn = get_single_question(self.question['qtn_id'])
+    #     print(single_qtn)
+    #     self.assertTrue(single_qtn['title'], 'What is json?')
 
     def test_post_an_answer(self):
         """Test API can post_an_answer"""
