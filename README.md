@@ -1,5 +1,5 @@
 # stackoverflow-lite2
-
+[![Build Status](https://travis-ci.org/RachaelNantale/stactoverflow-lite2.svg?branch=master)](https://travis-ci.org/RachaelNantale/stactoverflow-lite2)
 
 
 ## Description
