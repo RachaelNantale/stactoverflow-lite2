@@ -5,6 +5,7 @@
 ## Description
 The website serves as a platform for users to ask and answer questions, to vote questions and answers up or down and edit questions and answers.
 
+[Here is my Deployed app](https://stactoverflow-lite2.herokuapp.com/api/v1/questions)
 
 ## Features
 
@@ -23,7 +24,7 @@ answer.
 > 3. [pip](https://pypi.python.org/pypi/pip) 
 > 4. [virtualenv](https://virtualenv.pypa.io/en/stable/) 
 
-## Set u of the App
+## Set up of the App
 1. Clone the project
 
 `git clone https://github.com/RachaelNantale/stactoverflow-lite2.git`
