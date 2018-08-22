@@ -30,7 +30,7 @@ answer.
 
 2. Navigate to the project directory
 
-`cd stactocerflow-lite2`
+`cd stactoverflow-lite2`
 
 3. Create a virtual environment using `virtualenv` and activate it.
 
