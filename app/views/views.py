@@ -1,7 +1,8 @@
 
-from flask import Flask, make_response, jsonify, Blueprint
+from flask import Flask, make_response, jsonify, Blueprint, abort
 from flask_restful import Resource, Api, reqparse
 from app.models.models import QuestionsModels
+from app.utilities.utilities import validate_question_input
 bp = Blueprint('app', __name__)
 api = Api(bp)
 
@@ -27,12 +28,23 @@ class QuestionsList(Resource):
         Question_ID = len(Questions)
         Question_ID += 1
         args = self.reqparse.parse_args()
-        question = QuestionsModels(args['title'], args['body'],
-                                   args['tags'], Question_ID)
-        Questions.append(question)
-        return make_response(jsonify({
-            'question': question.__dict__,
-        }), 201)
+        question = validate_question_input(args['title'], args['body'],
+                                           args['tags'], Question_ID)
+
+        if isinstance(question, QuestionsModels):
+            for Question in Questions:
+                if Question.title == args['title']:
+                    return make_response(jsonify({'message':
+                                                  'Question already exists'}), 400)
+            Questions.append(question)
+
+            response = {
+                'Title': question.title,
+                'Description': question.body,
+                'Tags': question.tags
+            }
+            return make_response(jsonify(response), 201)
+        return question
 
     def get(self):
         questions = [question.__dict__ for question in Questions]
@@ -65,6 +77,15 @@ class Question(Resource):
                 {'message': 'Sorry no questions asked yet'}
             ))
         return make_response(jsonify(question), 200)
+
+    def delete(self, Question_ID):
+        """Method for Deleting a Question"""
+        delete_qtn = [
+            qtn for qtn in Questions if qtn.Question_ID == Question_ID]
+        if len(delete_qtn) == 0:
+            abort(404)
+        Questions.remove(delete_qtn[0])
+        return {'message': 'Successfully deleted'}
 
 
 api.add_resource(QuestionsList, '/api/v1/questions')

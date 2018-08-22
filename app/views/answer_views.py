@@ -3,6 +3,7 @@ from flask_restful import Resource, Api, reqparse
 from app.models.answer_models import AnswersModels
 from app.models.models import QuestionsModels
 from app.views.views import Questions
+from app.utilities.utilities import validate_answer_input
 answer_bp = Blueprint('answer_app', __name__)
 api = Api(answer_bp)
 
@@ -24,16 +25,18 @@ class Answers(Resource):
 
     def post(self, Question_ID):
         args = self.reqparse.parse_args()
-        my_answer = AnswersModels(args['answer'])
+        my_answer = validate_answer_input(args['answer'])
         question = get_single_question(Question_ID)
-        if not isinstance(question, QuestionsModels):
+        if isinstance(my_answer, AnswersModels):
+            if not isinstance(question, QuestionsModels):
+                return make_response(jsonify({
+                    'message': 'Please choose a question before you answer'
+                }), 400)
+            question.answers.append(my_answer.to_answerjson())
             return make_response(jsonify({
-                'message': 'Please choose a question before you answer'
-            }), 400)
-        question.answers.append(my_answer.to_answerjson())
-        return make_response(jsonify({
-            'Question': question.__dict__
-        }), 201)
+                'Question': question.__dict__
+            }), 201)
+        return my_answer
 
 
 api.add_resource(Answers, '/api/v1/questions/<int:Question_ID>/answers')
