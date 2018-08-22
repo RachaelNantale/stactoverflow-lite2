@@ -25,7 +25,7 @@ class Signup(Resource):
         args = self.reqparse.parse_args()
         new_user = UserModel(args['email'], args['password'])
         Users.append(new_user)
-        return make_response(jsonify(new_user.__dict__), 201)
+        return make_response(jsonify({'message': 'User succesfully created'}), 201)
 
 
 class Login(Resource):
@@ -46,17 +46,16 @@ class Login(Resource):
         args = self.reqparse.parse_args()
 
         for user in Users:
-            if user.email == args['email'] and user.password == args['password']:
-                expires = datetime.timedelta(days=1)
-                access_token = create_access_token(identity=args['email'],
-                                                   expires_delta=expires)
-                print(access_token)
-                return make_response(jsonify({'message': 'user successful\
-                                              logged in',
-                                              'token': access_token}))
-
-            return make_response(jsonify({'message': 'User not found.\
-                                      Please sign up'}), 400)
+                if user.email == args['email'] and user.password == args['password']:
+                    expires = datetime.timedelta(days=1)
+                    access_token = create_access_token(identity=args['email'],
+                                                       expires_delta=expires)
+                    print(access_token)
+                    return make_response(jsonify({'message': 'user successful\
+                                                logged in',
+                                                  'token': access_token}), 200)
+                return make_response(jsonify({'message': 'Please check your email or password'}), 400)
+        return make_response(jsonify({'message': 'User doesnot exist'}), 400)
 
 
 api.add_resource(Signup, '/api/v1/auth/signup')
