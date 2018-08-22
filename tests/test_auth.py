@@ -8,16 +8,6 @@ from app.views.answer_views import get_single_question
 
 
 class TestAll(BaseTest):
-    question = {
-        'title': 'What is json?',
-        'body': 'i wanna know what json is',
-        'tags': 'json',
-        'Question_ID': '1'
-    }
-
-    answer = {
-        'body': 'This is the answer body'
-    }
 
     signup = {
         'User_ID': '1',
