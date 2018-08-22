@@ -4,6 +4,7 @@ from app.models.models import QuestionsModels
 from app.models.answer_models import AnswersModels
 from app.views.views import Questions
 from app.views.answer_views import get_single_question
+from app.models.user_models import UserModel
 
 
 class TestAll(BaseTest):
@@ -11,7 +12,7 @@ class TestAll(BaseTest):
         'title': 'What is json?',
         'body': 'i wanna know what json is',
         'tags': 'json',
-        'qtn_id': '1'
+        'Questions_ID': '1'
     }
 
     answer = {
@@ -23,6 +24,10 @@ class TestAll(BaseTest):
         questionmodel = QuestionsModels('html', 'this is a sample question',
                                         'programming', '1')
         self.assertIsInstance(questionmodel, QuestionsModels)
+        answermodel = AnswersModels('this is a sample question')
+        self.assertIsInstance(answermodel, AnswersModels)
+        usermodel = UserModel('guest@email.com', 'password')
+        self.assertIsInstance(usermodel, UserModel)
 
     def test_post_question(self):
         """Test API can post a question"""
@@ -43,11 +48,6 @@ class TestAll(BaseTest):
         res = self.client.get('api/v1/questions/2',
                               content_type='application/json')
         self.assertEqual(res.status_code, 200)
-
-    def test_answer_class_initializer(self):
-        """ Test  Answer Class model"""
-        answermodel = AnswersModels('this is a sample question')
-        self.assertIsInstance(answermodel, AnswersModels)
 
     def test_post_an_answer(self):
         """Test API can post_an_answer"""

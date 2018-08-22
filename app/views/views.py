@@ -24,11 +24,11 @@ class QuestionsList(Resource):
         super(QuestionsList, self).__init__()
 
     def post(self):
-        qtn_id = len(Questions)
-        qtn_id += 1
+        Question_ID = len(Questions)
+        Question_ID += 1
         args = self.reqparse.parse_args()
         question = QuestionsModels(args['title'], args['body'],
-                                   args['tags'], qtn_id)
+                                   args['tags'], Question_ID)
         Questions.append(question)
         return make_response(jsonify({
             'question': question.__dict__,
@@ -57,9 +57,9 @@ class Question(Resource):
                                    location='json')
         super(Question, self).__init__()
 
-    def get(self, qtn_id):
+    def get(self, Question_ID):
         question = [
-            question.__dict__ for question in Questions if question.qtn_id == qtn_id]
+            question.__dict__ for question in Questions if question.Question_ID == Question_ID]
         if len(question) == 0:
             return make_response(jsonify(
                 {'message': 'Sorry no questions asked yet'}
@@ -68,4 +68,4 @@ class Question(Resource):
 
 
 api.add_resource(QuestionsList, '/api/v1/questions')
-api.add_resource(Question, '/api/v1/questions/<int:qtn_id>')
+api.add_resource(Question, '/api/v1/questions/<int:Question_ID>')
