@@ -3,11 +3,11 @@ import datetime
 
 class QuestionsModels:
 
-    def __init__(self,  title, body, tags, qtn_id):
-        self.qtn_id = qtn_id
+    def __init__(self,  title, body, tags, Question_ID):
+        self.Question_ID = Question_ID
         self.title = title
-        self.tags = tags
         self.body = body
+        self.tags = tags
         self.answers = []
         self.time = datetime.datetime.now()
 
@@ -16,8 +16,8 @@ class QuestionsModels:
         json representation of the questions model
         """
         return {
-            'id': self.qtn_id,
+            'id': self.Question_ID,
             'title': self.title,
-            'body': self.body,
+            'Description': self.body,
             'tags': self.tags
         }
