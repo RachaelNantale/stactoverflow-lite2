@@ -25,16 +25,12 @@ class Signup(Resource):
         """
         args = self.reqparse.parse_args()
         new_user = validate_user_input(args['email'], args['password'])
-
-        if isinstance(new_user, UserModel):
-
-            for user in Users:
-                if user.email == args['email']:
-                    return make_response(jsonify({'message':
-                                                  'User already exists'}), 400)
-            Users.append(new_user)
+        print(new_user)
+        try:
+            created_user = new_user.create_user()
             return make_response(jsonify({'message': 'User succesfully created'}), 201)
-        return new_user
+        except Exception:
+            return new_user.__dict__
 
 
 class Login(Resource):
@@ -53,17 +49,20 @@ class Login(Resource):
         Allows users to login to their accounts
         """
         args = self.reqparse.parse_args()
+        user = UserModel(args['email'], args['password'])
+        validate = validate_user_input(args['email'], args['password'])
+        logged_in_user = user.fetch_user()
 
-        for user in Users:
-            if user.email == args['email'] and user.password == args['password']:
-                expires = datetime.timedelta(days=1)
-                access_token = create_access_token(identity=args['email'],
-                                                   expires_delta=expires)
-                return make_response(jsonify({'message': 'user successful\
-                                                logged in',
-                                              'token': access_token}), 200)
-            return make_response(jsonify({'message': 'Please check your email or password'}), 400)
-        return make_response(jsonify({'message': 'User doesnot exist'}), 400)
+        if logged_in_user is  None:
+            expires = datetime.timedelta(days=1)
+            access_token = create_access_token(identity=args['email'],
+                                               expires_delta=expires)
+            print(access_token)
+            return make_response(jsonify({'message': 'user successful\
+                                            logged in',
+                                          'token': access_token}), 200)
+        return make_response(jsonify({'message': 'Please check your email or password'}), 400)
+        # return make_response(jsonify({'message': 'User doesnot exist'}), 400)
 
 
 api.add_resource(Signup, '/api/v1/auth/signup')
