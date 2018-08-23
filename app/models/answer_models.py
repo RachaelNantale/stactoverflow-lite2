@@ -4,16 +4,16 @@ import uuid
 
 class AnswersModels:
     def __init__(self, answer):
-        self.id = uuid.uuid4().hex
+        self.Answer_ID = uuid.uuid4().hex
         self.answer = answer.strip(" ")
-        self.time = datetime.datetime.now()
+        self.created_at = datetime.datetime.now()
 
     def to_answerjson(self):
         """
         json representation of the answers model
         """
         return {
-            'id': self.id,
+            'id': self.Answer_ID,
             'answer': self.answer,
-            'time': self.time
+            'Created At': self.created_at
         }
