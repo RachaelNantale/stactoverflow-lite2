@@ -4,7 +4,7 @@ from app.models.models import QuestionsModels
 from app.models.answer_models import AnswersModels
 
 
-def validate_user_input(email, password):
+def validate_user_input(email, password=None):
 
     if not re.match(r"([\w\.-]+)@([\w\.-]+)(\.[\w\.]+$)", email):
         return {'message': 'Please input a valid email'}, 400
