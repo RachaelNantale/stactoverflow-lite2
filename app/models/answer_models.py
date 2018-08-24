@@ -5,7 +5,7 @@ import uuid
 class AnswersModels:
     def __init__(self, answer):
         self.id = uuid.uuid4().hex
-        self.answer = answer
+        self.answer = answer.strip(" ")
         self.time = datetime.datetime.now()
 
     def to_answerjson(self):

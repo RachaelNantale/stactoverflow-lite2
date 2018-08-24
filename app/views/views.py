@@ -1,7 +1,8 @@
 
-from flask import Flask, make_response, jsonify, Blueprint
+from flask import Flask, make_response, jsonify, Blueprint, abort
 from flask_restful import Resource, Api, reqparse
 from app.models.models import QuestionsModels
+from app.utilities.utilities import validate_question_input
 bp = Blueprint('app', __name__)
 api = Api(bp)
 
@@ -15,7 +16,7 @@ class QuestionsList(Resource):
         self.reqparse.add_argument('title', type=str, required=True,
                                    help='No Title provided',
                                    location='json')
-        self.reqparse.add_argument('body', type=str, required=True,
+        self.reqparse.add_argument('description', type=str, required=True,
                                    help='Please post a question',
                                    location='json')
         self.reqparse.add_argument('tags', type=str, required=True,
@@ -24,15 +25,24 @@ class QuestionsList(Resource):
         super(QuestionsList, self).__init__()
 
     def post(self):
-        qtn_id = len(Questions)
-        qtn_id += 1
         args = self.reqparse.parse_args()
-        question = QuestionsModels(args['title'], args['body'],
-                                   args['tags'], qtn_id)
-        Questions.append(question)
-        return make_response(jsonify({
-            'question': question.__dict__,
-        }), 201)
+        question = validate_question_input(args['title'], args['description'],
+                                           args['tags'])
+
+        if isinstance(question, QuestionsModels):
+            for Question in Questions:
+                if Question.title == args['title']:
+                    return make_response(jsonify({'message':
+                                                  'Question already exists'}
+                                                 ), 400)
+            Questions.append(question)
+            response = {
+                'Title': question.title,
+                'Description': question.description,
+                'Tags': question.tags
+            }
+            return make_response(jsonify(response), 201)
+        return question
 
     def get(self):
         questions = [question.__dict__ for question in Questions]
@@ -49,7 +59,7 @@ class Question(Resource):
         self.reqparse.add_argument('title', type=str, required=True,
                                    help='No Title provided',
                                    location='json')
-        self.reqparse.add_argument('body', type=str, required=True,
+        self.reqparse.add_argument('description', type=str, required=True,
                                    help='Please post a question',
                                    location='json')
         self.reqparse.add_argument('tags', type=str, required=True,
@@ -57,15 +67,25 @@ class Question(Resource):
                                    location='json')
         super(Question, self).__init__()
 
-    def get(self, qtn_id):
+    def get(self, Question_ID):
         question = [
-            question.__dict__ for question in Questions if question.qtn_id == qtn_id]
+            question.__dict__ for question in Questions if question.get_id() == Question_ID]
+        print(question)
         if len(question) == 0:
             return make_response(jsonify(
                 {'message': 'Sorry no questions asked yet'}
             ))
         return make_response(jsonify(question), 200)
 
+    def delete(self, Question_ID):
+        """Method for Deleting a Question"""
+        delete_qtn = [
+            qtn for qtn in Questions if qtn.get_id() == Question_ID]
+        if len(delete_qtn) == 0:
+            abort(404)
+        Questions.remove(delete_qtn[0])
+        return {'message': 'Successfully deleted'}
+
 
 api.add_resource(QuestionsList, '/api/v1/questions')
-api.add_resource(Question, '/api/v1/questions/<int:qtn_id>')
+api.add_resource(Question, '/api/v1/questions/<string:Question_ID>')
