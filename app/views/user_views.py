@@ -3,6 +3,7 @@ from flask import Flask, make_response, jsonify, Blueprint
 from flask_restful import Resource, Api, reqparse
 from flask_jwt_extended import create_access_token
 from app.models.user_models import UserModel
+from app.utilities.utilities import validate_user_input
 user_bp = Blueprint('app_users', __name__)
 api = Api(user_bp)
 
@@ -23,9 +24,17 @@ class Signup(Resource):
         Allows users to create accounts
         """
         args = self.reqparse.parse_args()
-        new_user = UserModel(args['email'], args['password'])
-        Users.append(new_user)
-        return make_response(jsonify({'message': 'User succesfully created'}), 201)
+        new_user = validate_user_input(args['email'], args['password'])
+
+        if isinstance(new_user, UserModel):
+
+            for user in Users:
+                if user.email == args['email']:
+                    return make_response(jsonify({'message':
+                                                  'Email already taken. Please choose another'}), 400)
+            Users.append(new_user)
+            return make_response(jsonify({'message': 'User succesfully created'}), 201)
+        return new_user
 
 
 class Login(Resource):
@@ -46,15 +55,14 @@ class Login(Resource):
         args = self.reqparse.parse_args()
 
         for user in Users:
-                if user.email == args['email'] and user.password == args['password']:
-                    expires = datetime.timedelta(days=1)
-                    access_token = create_access_token(identity=args['email'],
-                                                       expires_delta=expires)
-                    print(access_token)
-                    return make_response(jsonify({'message': 'user successful\
+            if user.email == args['email'] and user.password == args['password']:
+                expires = datetime.timedelta(days=1)
+                access_token = create_access_token(identity=args['email'],
+                                                   expires_delta=expires)
+                return make_response(jsonify({'message': 'user successful\
                                                 logged in',
-                                                  'token': access_token}), 200)
-                return make_response(jsonify({'message': 'Please check your email or password'}), 400)
+                                              'token': access_token}), 200)
+            return make_response(jsonify({'message': 'Please check your email or password'}), 400)
         return make_response(jsonify({'message': 'User doesnot exist'}), 400)
 
 
