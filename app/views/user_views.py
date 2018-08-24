@@ -31,7 +31,7 @@ class Signup(Resource):
             for user in Users:
                 if user.email == args['email']:
                     return make_response(jsonify({'message':
-                                                  'User already exists'}), 400)
+                                                  'Email already taken. Please choose another'}), 400)
             Users.append(new_user)
             return make_response(jsonify({'message': 'User succesfully created'}), 201)
         return new_user

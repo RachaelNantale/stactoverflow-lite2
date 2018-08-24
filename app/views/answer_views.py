@@ -39,4 +39,4 @@ class Answers(Resource):
         return my_answer
 
 
-api.add_resource(Answers, '/api/v1/questions/<int:Question_ID>/answers')
+api.add_resource(Answers, '/api/v1/questions/<string:Question_ID>/answers')
