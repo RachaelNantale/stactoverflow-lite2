@@ -30,7 +30,7 @@ class Signup(Resource):
             created_user = new_user.create_user()
             return make_response(jsonify({'message': 'User succesfully created'}), 201)
         except Exception:
-            return new_user.__dict__
+            return new_user.__dict__, 201
 
 
 class Login(Resource):

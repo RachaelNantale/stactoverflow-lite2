@@ -1,5 +1,6 @@
 from flask import Flask, make_response, jsonify, Blueprint
 from flask_restful import Resource, Api, reqparse
+from flask_jwt_extended import jwt_required
 from app.models.answer_models import AnswersModels
 from app.models.models import QuestionsModels
 from app.views.views import Questions
@@ -23,6 +24,7 @@ class Answers(Resource):
                                    location='json')
         super(Answers, self).__init__()
 
+    @jwt_required
     def post(self, Question_ID):
         args = self.reqparse.parse_args()
         my_answer = validate_answer_input(args['answer'])
