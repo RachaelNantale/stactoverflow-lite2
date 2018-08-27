@@ -74,7 +74,6 @@ class Question(Resource):
     def get(self, Question_ID):
         question = [
             question.__dict__ for question in Questions if question.get_id() == Question_ID]
-        print(question)
         if len(question) == 0:
             return make_response(jsonify(
                 {'message': 'Sorry no questions asked yet'}
