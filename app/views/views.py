@@ -1,6 +1,7 @@
 
 from flask import Flask, make_response, jsonify, Blueprint, abort
 from flask_restful import Resource, Api, reqparse
+from flask_jwt_extended import jwt_required
 from app.models.models import QuestionsModels
 from app.utilities.utilities import validate_question_input
 bp = Blueprint('app', __name__)
@@ -24,6 +25,7 @@ class QuestionsList(Resource):
                                    location='json')
         super(QuestionsList, self).__init__()
 
+    @jwt_required
     def post(self):
         args = self.reqparse.parse_args()
         question = validate_question_input(args['title'], args['description'],
@@ -44,6 +46,7 @@ class QuestionsList(Resource):
             return make_response(jsonify(response), 201)
         return question
 
+    @jwt_required
     def get(self):
         questions = [question.__dict__ for question in Questions]
         if len(questions) == 0:
@@ -67,16 +70,17 @@ class Question(Resource):
                                    location='json')
         super(Question, self).__init__()
 
+    @jwt_required
     def get(self, Question_ID):
         question = [
             question.__dict__ for question in Questions if question.get_id() == Question_ID]
-        print(question)
         if len(question) == 0:
             return make_response(jsonify(
                 {'message': 'Sorry no questions asked yet'}
             ))
         return make_response(jsonify(question), 200)
 
+    @jwt_required
     def delete(self, Question_ID):
         """Method for Deleting a Question"""
         delete_qtn = [

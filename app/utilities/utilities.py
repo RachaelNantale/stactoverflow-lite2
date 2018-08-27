@@ -4,12 +4,12 @@ from app.models.models import QuestionsModels
 from app.models.answer_models import AnswersModels
 
 
-def validate_user_input(email, password):
+def validate_user_input(email, password=None):
 
     if not re.match(r"([\w\.-]+)@([\w\.-]+)(\.[\w\.]+$)", email):
         return {'message': 'Please input a valid email'}, 400
     if len(password) < 5:
-        return {'message': 'This password is not strong enough. Please add more'}, 400
+        return {'message': 'This password is not strong enough '}, 400
 
     return UserModel(email=email, password=password)
 
