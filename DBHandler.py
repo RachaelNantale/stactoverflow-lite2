@@ -14,7 +14,7 @@ class MyDatabase():
             self.cur = self.connection.cursor()
             self.create_tables()
         except psycopg2.Error as error:
-            print(error)
+            return error
 
     def create_tables(self):
         Users_table = """CREATE TABLE IF NOT EXISTS UserTable (User_ID TEXT PRIMARY KEY,
@@ -41,8 +41,13 @@ class MyDatabase():
     #     self.cur.execute(drop_questions_table)
     #     self.cur.execute(drop_answers_table)
 
-    def create_login(self, sql):
+    def create_user(self, sql):
         self.cur.execute(sql)
+        result = self.cur.fetchone()
+        return result
+
+    def check_user_exists(self, query):
+        self.cur.execute(query)
         result = self.cur.fetchone()
         return result
 
@@ -51,9 +56,11 @@ class MyDatabase():
         result = self.cur.fetchone()
         return result
 
+
     def close(self):
         self.cur.close()
         self.connection.close()
+
 
 if __name__ == '__main__':
     db = MyDatabase()
