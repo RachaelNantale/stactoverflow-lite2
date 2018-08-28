@@ -31,22 +31,12 @@ class QuestionsList(Resource):
         question = QuestionsModels(args['title'], args['description'],
                                    args['tags'])
 
-        # if isinstance(question, QuestionsModels):
-        #     for Question in Questions:
-        #         if Question.title == args['title']:
-        #             return make_response(jsonify({'message':
-        #                                           'Question already exists'}
-        #                                          ), 400)
         try:
-            question.create_question()
-            response = {
-                'Title': question.title,
-                'Description': question.description,
-                'Tags': question.tags
-            }
-            return make_response(jsonify(response), 201)
+            created_question = question.create_question()
+            print(created_question)
+            return created_question
         except Exception:
-            return question
+            return make_response(jsonify({'Message': 'An error occurred please try again'}), 400)
 
     @jwt_required
     def get(self):
@@ -75,19 +65,19 @@ class Question(Resource):
     @jwt_required
     def get(self, Question_ID):
         question = db.fetch_single_question(Question_ID)
-        if len(question) == 0:
-            return make_response(jsonify(
-                {'message': 'Sorry no questions asked yet'}
-            ))
-        return make_response(jsonify(question), 200)
+        if question is not None:
+            return make_response(jsonify(question), 200)
+        return make_response(jsonify(
+            {'message': 'Sorry no questions asked yet'}
+        ))
 
     @jwt_required
     def delete(self, Question_ID):
         """Method for Deleting a Question"""
         delete_qtn = db.delete_record(Question_ID)
-        if len(delete_qtn) == 0:
-            abort(404)
-        return {'message': 'Successfully deleted'}
+        if delete_qtn is not None:
+           return {'message': 'Successfully deleted'}
+        return {'message': 'Question Id incorrect or doesnot exist'}
 
 
 api.add_resource(QuestionsList, '/api/v1/questions')
