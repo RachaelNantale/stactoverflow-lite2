@@ -3,11 +3,8 @@ from flask import Flask, make_response, jsonify, Blueprint
 from flask_restful import Resource, Api, reqparse
 from flask_jwt_extended import create_access_token
 from app.models.user_models import UserModel
-from app.utilities.utilities import validate_user_input
 user_bp = Blueprint('app_users', __name__)
 api = Api(user_bp)
-
-Users = []
 
 
 class Signup(Resource):
@@ -24,13 +21,20 @@ class Signup(Resource):
         Allows users to create accounts
         """
         args = self.reqparse.parse_args()
-        new_user = validate_user_input(args['email'], args['password'])
-        print(new_user)
+        response = UserModel(args['email'], args['password'])
+        print(response)
         try:
-            created_user = new_user.create_user()
-            return make_response(jsonify({'message': 'User succesfully created'}), 201)
+
+            created_user = response.create_user()
+            message = 'User Created Successfuly'
+            status_code = 201
+            return make_response(jsonify({'user' : created_user}), status_code)
+
         except Exception:
-            return new_user, 400
+            created_user = response.create_user()
+            message = 'An error occured please check again.'
+            status_code = 400
+            return make_response(jsonify({'User': created_user}), status_code)
 
 
 class Login(Resource):
@@ -53,7 +57,7 @@ class Login(Resource):
         validate = validate_user_input(args['email'], args['password'])
         logged_in_user = user.fetch_user()
 
-        if logged_in_user is  None:
+        if logged_in_user is None:
             expires = datetime.timedelta(days=1)
             access_token = create_access_token(identity=args['email'],
                                                expires_delta=expires)

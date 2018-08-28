@@ -3,11 +3,11 @@ from flask import Flask, make_response, jsonify, Blueprint, abort
 from flask_restful import Resource, Api, reqparse
 from flask_jwt_extended import jwt_required
 from app.models.models import QuestionsModels
-from app.utilities.utilities import validate_question_input
+from DBHandler import MyDatabase
 bp = Blueprint('app', __name__)
 api = Api(bp)
 
-Questions = []
+db = MyDatabase()
 
 
 class QuestionsList(Resource):
@@ -28,27 +28,29 @@ class QuestionsList(Resource):
     @jwt_required
     def post(self):
         args = self.reqparse.parse_args()
-        question = validate_question_input(args['title'], args['description'],
-                                           args['tags'])
+        question = QuestionsModels(args['title'], args['description'],
+                                   args['tags'])
 
-        if isinstance(question, QuestionsModels):
-            for Question in Questions:
-                if Question.title == args['title']:
-                    return make_response(jsonify({'message':
-                                                  'Question already exists'}
-                                                 ), 400)
-            Questions.append(question)
+        # if isinstance(question, QuestionsModels):
+        #     for Question in Questions:
+        #         if Question.title == args['title']:
+        #             return make_response(jsonify({'message':
+        #                                           'Question already exists'}
+        #                                          ), 400)
+        try:
+            question.create_question()
             response = {
                 'Title': question.title,
                 'Description': question.description,
                 'Tags': question.tags
             }
             return make_response(jsonify(response), 201)
-        return question
+        except Exception:
+            return question
 
     @jwt_required
     def get(self):
-        questions = [question.__dict__ for question in Questions]
+        questions = db.fetch_all_questions()
         if len(questions) == 0:
             return make_response(jsonify(
                 {'message': 'Sorry no questions asked yet'}
@@ -72,8 +74,7 @@ class Question(Resource):
 
     @jwt_required
     def get(self, Question_ID):
-        question = [
-            question.__dict__ for question in Questions if question.get_id() == Question_ID]
+        question = db.fetch_single_question(Question_ID)
         if len(question) == 0:
             return make_response(jsonify(
                 {'message': 'Sorry no questions asked yet'}
@@ -83,11 +84,9 @@ class Question(Resource):
     @jwt_required
     def delete(self, Question_ID):
         """Method for Deleting a Question"""
-        delete_qtn = [
-            qtn for qtn in Questions if qtn.get_id() == Question_ID]
+        delete_qtn = db.delete_record(Question_ID)
         if len(delete_qtn) == 0:
             abort(404)
-        Questions.remove(delete_qtn[0])
         return {'message': 'Successfully deleted'}
 
 
