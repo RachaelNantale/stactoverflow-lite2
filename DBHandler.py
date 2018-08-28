@@ -32,14 +32,14 @@ class MyDatabase():
         created_at TIMESTAMP) """
         self.cur.execute(answers_table)
 
-    # def drop_tables(self):
-    #     drop_Users_table = """DROP TABLE IF EXISTS UserTable CASCADE"""
-    #     drop_questions_table = """DROP TABLE IF EXISTS QuestionTable CASCADE"""
-    #     drop_answers_table = """DROP TABLE IF EXISTS AnswerTable CASCADE"""
+    def drop_tables(self):
+        drop_Users_table = """DROP TABLE IF EXISTS UserTable CASCADE"""
+        drop_questions_table = """DROP TABLE IF EXISTS QuestionTable CASCADE"""
+        drop_answers_table = """DROP TABLE IF EXISTS AnswerTable CASCADE"""
 
-    #     self.cur.execute(drop_Users_table)
-    #     self.cur.execute(drop_questions_table)
-    #     self.cur.execute(drop_answers_table)
+        self.cur.execute(drop_Users_table)
+        self.cur.execute(drop_questions_table)
+        self.cur.execute(drop_answers_table)
 
     def create_user(self, sql):
         self.cur.execute(sql)
@@ -56,7 +56,7 @@ class MyDatabase():
     def fetch_user(self, sql):
         self.cur.execute(sql)
         result = self.cur.fetchone()
-        return result
+        return result 
 
     def fetch_all_questions(self):
         self.cur.execute(
