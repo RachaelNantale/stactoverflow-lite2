@@ -12,9 +12,10 @@ class MyDatabase():
 
             self.connection.autocommit = True
             self.cur = self.connection.cursor()
+
             self.create_tables()
         except psycopg2.Error as error:
-            return error
+            print(error)
 
     def create_tables(self):
         Users_table = """CREATE TABLE IF NOT EXISTS UserTable (User_ID TEXT PRIMARY KEY,
@@ -43,20 +44,18 @@ class MyDatabase():
 
     def create_user(self, sql):
         self.cur.execute(sql)
-        # result = self.cur.fetchone()
-        # return result
 
     def check_user_exists(self, query):
         self.cur.execute(query)
         result = self.cur.fetchone()
         if result:
             return True
-        return False    
+        return False
 
     def fetch_user(self, sql):
         self.cur.execute(sql)
         result = self.cur.fetchone()
-        return result 
+        return result
 
     def fetch_all_questions(self):
         self.cur.execute(
@@ -70,30 +69,31 @@ class MyDatabase():
             my_dict['description'] = question[2]
             my_dict['tags'] = question[3]
             my_dict['time'] = question[4]
-            
+
             my_questions.append(my_dict)
-        return questions
+        return my_questions
 
     def fetch_single_question(self, Question_ID):
 
         self.cur.execute(
-            "SELECT * FROM QuestionTable WHERE id = '{}' ".format(id))
-        question = self.cur.fetchone()
+            "SELECT * FROM QuestionTable WHERE Question_ID = '{}' ".format(Question_ID))
+        question = self.cur.fetchall()
         my_dict = {}
-        if question:
-            my_dict['Question_ID'] = question[0]
-            my_dict['title'] = question[1]
-            my_dict['description'] = question[2]
-            my_dict['tags'] = question[3]
-            my_dict['time'] = question[4]
-            print(my_dict)
-            return my_dict
-        return None
+        for question in question:
+            if question:
+                my_dict['Question_ID'] = question[0]
+                my_dict['title'] = question[1]
+                my_dict['description'] = question[2]
+                my_dict['tags'] = question[3]
+                my_dict['time'] = question[4]
+                print(my_dict)
+                return my_dict
+            return None
 
     def delete_record(self, Question_ID):
-        delete_cmd = "DELETE FROM QuestionTable WHERE id='{}'".format(id)
+        delete_cmd = "DELETE FROM QuestionTable WHERE Question_ID='{}'".format(
+            Question_ID)
         self.cur.execute(delete_cmd)
-
 
     def close(self):
         self.cur.close()
