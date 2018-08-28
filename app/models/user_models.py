@@ -13,20 +13,6 @@ class UserModel():
         self.email = email.strip(" ")
         self.password = password.strip(" ")
 
-    # def create_user(self):
-    #     sql = "INSERT INTO UserTable values('{}','{}','{}')RETURNING User_ID".format(
-    #         self.User_ID, self.email, self.password)
-    #     db.create_user(sql)
-
-    # def fetch_user(self):
-    #     sql = "SELECT * FROM UserTable WHERE email = '{}'".format(
-    #         self.email)
-    #     db.fetch_user(sql)
-
-    # def check_user_exists(self):
-    #     query = "SELECT * FROM UserTable WHERE email = '{}'".format(self.email)
-    #     return db.check_user_exists(query)
-
     def create_user(self):
         query = "SELECT * FROM UserTable WHERE email = '{}'".format(self.email)
 
@@ -52,4 +38,3 @@ class UserModel():
             self.email)
         print(sql)
         return db.fetch_user(sql)
-        
