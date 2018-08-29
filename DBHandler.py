@@ -26,6 +26,7 @@ class MyDatabase():
         questions_table = """CREATE TABLE IF NOT EXISTS QuestionTable
         (Question_ID TEXT PRIMARY KEY, Title TEXT NOT NULL UNIQUE,
         body varchar(50) NOT NULL, tags varchar(50) NOT NULL,
+        asked_by varchar(50) NOT NULL,
         created_at TIMESTAMP)"""
         self.cur.execute(questions_table)
 
@@ -36,6 +37,7 @@ class MyDatabase():
         Question_ID TEXT, FOREIGN KEY(Question_ID)
         REFERENCES QuestionTable(Question_ID)
         ON DELETE CASCADE ON UPDATE CASCADE,
+        answered_by varchar(50) NOT NULL,
         status bool DEFAULT False
         
         ) """
