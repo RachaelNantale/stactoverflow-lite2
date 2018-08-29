@@ -1,4 +1,5 @@
 import psycopg2
+import psycopg2.extras as extras
 
 
 class MyDatabase():
@@ -29,8 +30,15 @@ class MyDatabase():
         self.cur.execute(questions_table)
 
         answers_table = """CREATE TABLE IF NOT EXISTS AnswerTable
-        (Answer_ID TEXT PRIMARY KEY, Answer TEXT NOT NULL UNIQUE,
-        created_at TIMESTAMP) """
+        (Answer_ID TEXT PRIMARY KEY,
+        created_at TIMESTAMP,
+        Answer TEXT NOT NULL UNIQUE,
+        Question_ID TEXT, FOREIGN KEY(Question_ID)
+        REFERENCES QuestionTable(Question_ID)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+        status bool DEFAULT False
+        
+        ) """
         self.cur.execute(answers_table)
 
     def drop_tables(self):
@@ -41,11 +49,14 @@ class MyDatabase():
         self.cur.execute(drop_Users_table)
         self.cur.execute(drop_questions_table)
         self.cur.execute(drop_answers_table)
+# 333333
 
-    def create_user(self, sql):
-        self.cur.execute(sql)
+#######################################################################################################
+    def create_item(self, sql):
+        result = self.cur.execute(sql)
+        return {'message': 'Created succesfully'}, 201
 
-    def check_user_exists(self, query):
+    def check_item_exists(self, query):
         self.cur.execute(query)
         result = self.cur.fetchone()
         if result:
@@ -90,10 +101,49 @@ class MyDatabase():
                 return my_dict
             return None
 
+    def fetch_all_answers(self, Question_ID):
+        self.cur.execute("SELECT title,body,tags FROM QuestionTable WHERE Question_ID = '{}'".format(
+            Question_ID))
+        question = self.cur.fetchone()
+        self.cur.execute(
+            "SELECT * FROM AnswerTable where Question_ID = '{}'".format(Question_ID))
+        answers = self.cur.fetchall()
+        answers = [row for row in answers]
+        my_answers = []
+        for index in range(len(answers)):
+            user_answers = (
+                {
+                    'Answer_ID': answers[index][0],
+                    'created at': answers[index][1],
+                    'answer': answers[index][2],
+                    'status': answers[index][4]
+
+                })
+            my_answers.append(user_answers)
+        return {'Question': {'title': question[0],
+                             'Description': question[1],
+                             'tags': question[2],
+                             'answers': my_answers
+
+                             }}
+
+    def update_answer(self, query3):
+        if self.cur.execute(query3) is None:
+            return True
+        return False
+
     def delete_record(self, Question_ID):
-        delete_cmd = "DELETE FROM QuestionTable WHERE Question_ID='{}'".format(
-            Question_ID)
-        self.cur.execute(delete_cmd)
+        try:
+
+            query = "DELETE FROM QuestionTable WHERE Question_ID='{}'".format(
+                Question_ID)
+            self.cur.execute(query)
+            delete_cmd = self.cur.rowcount
+            if delete_cmd > 0:
+                return {'message': 'succesfully deleted'}, 200
+            return {'message': 'Question Id doesnt exist'}, 400
+        except Exception as exp:
+            return {"message": str(exp)}, 400
 
     def close(self):
         self.cur.close()
