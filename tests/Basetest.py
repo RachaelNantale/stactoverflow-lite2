@@ -1,39 +1,37 @@
 import unittest
+import json
 from app import create_app
 from instance.config import TestingConfig
-from app.views.views import Questions
-import json
+from DBHandler import MyDatabase
 
 
-class BaseTest(unittest.TestCase):
+class BaseTest (unittest.TestCase):
 
     def setUp(self):
         self.app = create_app(TestingConfig)
         self.client = self.app.test_client()
-        self.Test_Questions = []
+        db = MyDatabase()
+        db.create_tables()
 
-    def check_duplicate_data(self):
-        """Test for Duplicate data"""
-        self.client.post('/api/v1/questions',
+    def user_login(self):
+        self.client.post('/api/v1/auth/signup',
                          content_type='application/json',
-                         data=json.dumps({
-                             'title': 'What is jsony?',
-                             'description': 'i wanna know what json is',
-                             'tags': 'json'
-                         }))
-
-        res = self.client.post('/api/v1/questions',
+                         data=json.dumps({'User_ID': '1',
+                                          'email': 'rachael@guest.com',
+                                          'password': 'password'}))
+        res = self.client.post('/api/v1/auth/login',
                                content_type='application/json',
-                               data=json.dumps({
-                                   'title': 'What is jsony?',
-                                   'description': 'i wanna know what json is',
-                                   'tags': 'json'
-                               }))
-        data = json.loads(res.data.decode())
+                               data=json.dumps({'email': 'rachael@guest.com',
+                                                'password': 'password'}))
+
+        payload = json.loads(res.data.decode())
+        return payload['token']
 
     def tearDown(self):
-        self.Test_Questions = []
+        db = MyDatabase()
+        db.drop_tables()
+        db.create_tables()
 
 
 if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    unittest.main()
