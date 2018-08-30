@@ -2,9 +2,7 @@ from flask import Flask
 from app.views.views import bp
 from app.views.answer_views import answer_bp
 from app.views.user_views import user_bp
-
-from flask_jwt_extended import (
-    JWTManager, jwt_required, create_access_token, get_jwt_identity)
+from flask_jwt_extended import JWTManager
 
 
 def create_app(config_name):
