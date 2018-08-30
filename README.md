@@ -20,9 +20,10 @@ answer.
 
 ## Main requirements include:
 > 1. [git](https://git-scm.com/)
->2. [python](https://docs.python.org/) 
+> 2. [python](https://docs.python.org/) 
 > 3. [pip](https://pypi.python.org/pypi/pip) 
 > 4. [virtualenv](https://virtualenv.pypa.io/en/stable/) 
+> 5. [postgresql](https://www.postgresql.org/)
 
 ## Set up of the App
 1. Clone the project
@@ -40,15 +41,27 @@ answer.
 
 4. Install packages using `pip install -r requirements.txt`
 
-5. Run the app by running `run.py`
+5. Set up the Database using `postgresql` and connect to the database using `psycopg2`
+
+6. Run the app by running `run.py`
 
 `python run.py`
+
+7. Run Tests 
+
+` nosetests --with-coverage`
 
 ## The API Endpoints
 
 | End Point  | Description |
 | ------------- | ------------- |
 | GET /api/v1/questions | Fetch all the questions |
-| GET /api/v1/questions/<int:Question_ID>/ |  Fetch a single question |
+| GET /api/v1/questions/<str:Question_ID>/ |  Fetch a single question |
 | POST /api/v1/questions |Create a question|
-| POST /api/v1/questions/<int:Question_ID>/answers|Post An answer to a question |
+| POST /api/v1/questions/<str:Question_ID>/answers|Post An answer to a question |
+| GET /api/v1/questions/<string:Question_ID>/answers| Get all answers
+|PUT /api/v1/questions/<string:Question_ID>/answers/<string:Answer_ID> | Mark answer as preferred or Update an answer
+|POST /api/v1/auth/signup |Sign up 
+|POST /api/v1/auth/login  | Login
+
+
