@@ -1,7 +1,5 @@
 import uuid
-from flask_bcrypt import Bcrypt
 from DBHandler import MyDatabase
-import re
 from app.utilities.utilities import validate_user_input
 db = MyDatabase()
 

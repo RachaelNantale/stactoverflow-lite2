@@ -16,9 +16,6 @@ class AnswerList(Resource):
         self.reqparse.add_argument('answer', type=str, required=True,
                                    help='Please fill in an answer',
                                    location='json')
-        self.reqparse.add_argument('status', type=str, required=True,
-                                   help='Please fill in a status',
-                                   location='json')
 
         super(AnswerList, self).__init__()
 

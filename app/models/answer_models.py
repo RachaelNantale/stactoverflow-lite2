@@ -1,7 +1,5 @@
 import datetime
 import uuid
-from flask_jwt_extended import current_user, get_jwt_identity
-from app.models.models import QuestionsModels
 from app.utilities.utilities import validate_answer_input
 from DBHandler import MyDatabase
 
