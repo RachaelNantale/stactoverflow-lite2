@@ -22,7 +22,6 @@ class UserModel():
 
         sql = "INSERT INTO UserTable values('{}','{}','{}')".format(
             self.User_ID, self.email, self.password)
-        print(sql)
         return db.create_item(sql)
 
     def fetch_user(self, email):
@@ -32,5 +31,4 @@ class UserModel():
 
         sql = "SELECT * FROM UserTable WHERE email = '{}'".format(
             self.email)
-        print(sql)
         return db.fetch_user(sql)

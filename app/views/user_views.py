@@ -60,7 +60,8 @@ class Login(Resource):
             return make_response(jsonify({'message': 'user successful logged in',
                                           'token': access_token}))
 
-        return make_response(jsonify({'message': 'User not found.Please sign up'}), 400)
+        return make_response(jsonify({'message': 'User not found.Please sign up'}),
+                             400)
 
 
 api.add_resource(Signup, '/api/v1/auth/signup')
