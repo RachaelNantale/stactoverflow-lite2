@@ -184,7 +184,7 @@ class MyDatabase():
         except Exception as exception:
             return {"message": str(exception)}, 400
 
-    def accept_answer(self, status, Question_ID, Answer_ID):
+    def accept_answer(self, status, Answer_ID, Question_ID):
 
         try:
             query = ("""UPDATE answers SET status = '{}' where Answer_ID = '{}' and Question_ID = '{}'""" .format(
