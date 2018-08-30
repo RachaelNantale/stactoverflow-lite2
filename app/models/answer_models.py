@@ -14,7 +14,6 @@ class AnswersModels:
         self.Answer_ID = uuid.uuid4().hex
         self.answer = answer.strip(" ")
         self.answered_by = answered_by
-        self.status = False
         self.created_at = datetime.datetime.now()
 
     def to_answerjson(self):
@@ -36,5 +35,6 @@ class AnswersModels:
             return validate
 
         sql = "INSERT INTO AnswerTable values('{}','{}','{}','{}', '{}')".format(
-            self.Answer_ID, self.created_at, self.answer, self.Question_ID, self.answered_by)
+            self.Answer_ID, self.created_at, self.answer, self.Question_ID,
+            self.answered_by)
         return db.create_item(sql)
