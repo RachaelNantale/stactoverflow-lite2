@@ -43,10 +43,9 @@ class QuestionsList(Resource):
     def get(self):
         questions = db.fetch_all_questions()
         if len(questions) == 0:
-            return make_response(jsonify(
-                {'message': 'Sorry no questions asked yet'}, 400
-            ))
-        return make_response(jsonify(questions), 200)
+            return {'message': 'Sorry no questions asked yet'}, 400
+
+        return jsonify({'message': questions})
 
 
 class Question(Resource):

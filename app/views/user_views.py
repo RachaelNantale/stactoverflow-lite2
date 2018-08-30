@@ -30,7 +30,6 @@ class Signup(Resource):
 
         except Exception:
             created_user = response.create_user()
-            message = 'An error occured please check again.'
             status_code = 400
             return make_response(jsonify({'User': created_user}), status_code)
 
@@ -53,7 +52,6 @@ class Login(Resource):
         args = self.reqparse.parse_args()
         user = UserModel(args['email'], args['password'])
         logged_in_user = user.fetch_user(args['email'])
-        print(logged_in_user)
 
         if logged_in_user is not None:
             expires = datetime.timedelta(days=1)
