@@ -67,7 +67,7 @@ class Answers(Resource):
 
         if question_exists:
             if answer_exists:
-                if logged_in_user == a_owner:
+                if logged_in_user == a_owner['asked_by']:
                     my_answer = AnswersModels(
                         args['answer'], Question_ID, logged_in_user)
                     update = db.update_answer(
