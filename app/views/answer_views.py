@@ -16,6 +16,9 @@ class AnswerList(Resource):
         self.reqparse.add_argument('answer', type=str, required=True,
                                    help='Please fill in an answer',
                                    location='json')
+        self.reqparse.add_argument('status', type=str, required=True,
+                                   help='Please fill in a status',
+                                   location='json')
 
         super(AnswerList, self).__init__()
 
@@ -36,7 +39,7 @@ class AnswerList(Resource):
         try:
             question = db.fetch_all_answers(Question_ID)
             if question is not None:
-                return make_response(jsonify(question), 200)
+                return jsonify({'message': question})
         except:
             return make_response(jsonify(
                 {'message': 'Sorry the question or answer doesnt exist'}
@@ -52,40 +55,44 @@ class Answers(Resource):
 
     @jwt_required
     def put(self, Question_ID, Answer_ID):
+        try:
 
-        args = self.reqparse.parse_args()
-        current_user = get_jwt_identity()
-        user = db.fetch_user_by_email(email=current_user)
-        logged_in_user = user
-        print(logged_in_user)
+            args = self.reqparse.parse_args()
 
-        answer_exists = db.fetch_answer_by_id(Answer_ID=Answer_ID)
-        question_exists = db.fetch_single_question_by_id(
-            Question_ID=Question_ID)
-        a_owner = db.fetch_answer_details(Question_ID, Answer_ID)
-        qtn_details = db.fetch_a_question(Question_ID=Question_ID)
+            current_user = get_jwt_identity()
+            user = db.fetch_user_by_email(email=current_user)
+            logged_in_user = user[1]
 
-        if question_exists:
-            if answer_exists:
-                if logged_in_user == a_owner['asked_by']:
-                    my_answer = AnswersModels(
-                        args['answer'], Question_ID, logged_in_user)
-                    update = db.update_answer(
-                        answer=args['answer'], Question_ID=Question_ID,
-                        Answer_ID=Answer_ID)
-                    updated_answer = db.fetch_answer_details(
-                        Question_ID=Question_ID, Answer_ID=Answer_ID)
-                    return {'msg': update, 'upt_ans': updated_answer}
-                if logged_in_user == qtn_details:
-                    status = True
+            answer_exists = db.fetch_answer_by_id(Answer_ID=Answer_ID)
+            question_exists = db.fetch_single_question_by_id(
+                Question_ID=Question_ID)
 
-                    accept = db.accept_answer(
-                        status=status, Question_ID=Question_ID, Answer_ID=Answer_ID)
-                    updated_answer = db.fetch_answer_details(
-                        Question_ID=Question_ID, Answer_ID=Answer_ID)
-                    return jsonify({"message": accept, "Updated answer": updated_answer})
-            return make_response(jsonify({"message": " No such answer exists"}), 400)
-        return make_response(jsonify({"message": " No such question exists any more"}), 400)
+            a_owner_email = db.fetch_answer_details(Question_ID, Answer_ID)[4]
+
+            qtn_details = db.fetch_single_question_by_id(
+                Question_ID=Question_ID)
+            qtn_details_email = qtn_details[4]
+
+            if question_exists:
+                if answer_exists:
+                    if logged_in_user == a_owner_email:
+                        update = db.update_answer(
+                            answer=args['answer'], Question_ID=Question_ID,
+                            Answer_ID=Answer_ID)
+                        updated_answer = db.fetch_answer_details(
+                            Question_ID=Question_ID, Answer_ID=Answer_ID)
+
+                    if logged_in_user == qtn_details_email:
+                        db.accept_answer(Answer_ID=Answer_ID)
+                        updated_answer = db.fetch_answer_details(
+                            Question_ID=Question_ID, Answer_ID=Answer_ID)
+
+                        return jsonify({"message": update, "Updated answer": updated_answer})
+                return make_response(jsonify({"message": "Answer doesnt exist"}), 400)
+            return make_response(jsonify({"message": "Question doesnt exist"}), 400)
+        except Exception as e:
+            print(e)
+            return {'Message': 'Please check your Question or Answer'}
 
 
 api.add_resource(AnswerList, '/api/v1/questions/<string:Question_ID>/answers')
