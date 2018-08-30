@@ -14,10 +14,8 @@ class UserModel():
         self.password = password.strip(" ")
 
     def create_user(self):
-        query = "SELECT * FROM UserTable WHERE email = '{}'".format(self.email)
 
-        if db.check_user_exists(query):
-            print(query)
+        if db.fetch_user_by_email(self.email):
             return {'Message': 'User already exists'}, 400
 
         validate = validate_user_input(self.email, self.password)
@@ -27,7 +25,7 @@ class UserModel():
         sql = "INSERT INTO UserTable values('{}','{}','{}')".format(
             self.User_ID, self.email, self.password)
         print(sql)
-        return db.create_user(sql)
+        return db.create_item(sql)
 
     def fetch_user(self, email):
         validate = validate_user_input(self.email, self.password)
