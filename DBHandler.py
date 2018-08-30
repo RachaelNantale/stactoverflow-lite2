@@ -53,7 +53,7 @@ class MyDatabase():
         self.cur.execute(drop_answers_table)
 
     def create_item(self, sql):
-        result = self.cur.execute(sql)
+        self.cur.execute(sql)
         return {'message': 'Created succesfully'}, 201
 
     def check_item_exists(self, query):
@@ -137,12 +137,6 @@ class MyDatabase():
         details = self.cur.fetchone()
         return details
 
-    def fetch_a_question(self, Question_ID):
-        self.cur.execute(
-            "SELECT * FROM QuestionTable WHERE Question_ID = '{}'" .format(Question_ID))
-        row = self.cur.fetchone()
-        return row
-
     def fetch_all_answers(self, Question_ID):
         self.cur.execute("SELECT * FROM QuestionTable WHERE Question_ID = '{}'".format(
             Question_ID))
@@ -173,32 +167,26 @@ class MyDatabase():
 
     def update_answer(self, answer, Answer_ID, Question_ID):
         try:
-            self.cur.execute("UPDATE AnswerTable SET answer = '{}' where Answer_ID = '{}' and Question_ID = '{}'" .format(
+            self.cur.execute("UPDATE AnswerTable SET answer = '{}' WHERE Answer_ID = '{}' and Question_ID = '{}'" .format(
                 answer, Answer_ID, Question_ID))
             cmd = self.cur.rowcount
-            if int(cmd) > 0:
-                return "Answer successfully updated"
+            self.connection.commit()
+            if (cmd) > 0:
+                return "Update succesful"
             else:
                 return "Answer not updated, or doesn't exist"
 
         except Exception as exception:
             return {"message": str(exception)}, 400
 
-    def accept_answer(self, status, Answer_ID, Question_ID):
+    def accept_answer(self,  Answer_ID):
 
-        try:
-            query = ("""UPDATE answers SET status = '{}' where Answer_ID = '{}' and Question_ID = '{}'""" .format(
-                status, Answer_ID, Question_ID))
-            self.cur.execute(query)
-            count = self.cur.rowcount
-            if int(count) > 0:
-                return "Answer successfully accepted"
-            else:
-                return "Failed to accept answer, or it doesn't exist"
-
-        except Exception as exception:
-            return {"message": str(exception)}, 400
-
+        # try:
+        query = "UPDATE AnswerTable SET status = TRUE WHERE Answer_ID = '{}';" .format(
+            Answer_ID)
+        ans = self.cur.execute(query, [Answer_ID])
+        return ans
+        
     def delete_record(self, Question_ID):
         try:
 
