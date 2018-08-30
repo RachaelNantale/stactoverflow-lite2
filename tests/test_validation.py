@@ -39,13 +39,23 @@ class TestValidation(BaseTest):
                                content_type='application/json',
                                headers=dict(
                                    Authorization='Bearer ' + payload),
-                               data={'title': "  !@#$$#",
-                                     'description': 'rachael@sample.com',
-                                     'tags': '123abc'})
+                               data=json.dumps({'title': "  !@#$$#",
+                                                'description': 'rachael@sample.com',
+                                                'tags': '123abc'}))
         reply = json.loads(res.data.decode())
         self.assertEqual(res.status_code, 400)
-        self.assertTrue(
-            "Please do not use symbols", reply['message'])
+        self.assertIn(
+            "Please dont input symbols", reply['message'])
+
+    def tests_short_password(self):
+        """Test whether the password length is > 7"""
+        res = self.client.post('/api/v1/auth/signup',
+                               content_type='application/json',
+                               data=json.dumps({'email': 'guest@email.com',
+                                                'password': ''}))
+        reply = json.loads(res.data.decode())
+        self.assertEqual(res.status_code, 400)
+        self.assertIn('This password is not strong enough', reply['message'])
 
     def test_if_fields_left_blank(self):
         payload = self.user_login()
@@ -54,14 +64,14 @@ class TestValidation(BaseTest):
                                content_type='application/json',
                                headers=dict(
                                    Authorization='Bearer ' + payload),
-                               data={'title': "  ",
-                                     'description': 'rachael@sample.com',
-                                     'tags': '123abc'})
+                               data=json.dumps({'title': "  ",
+                                                'description': 'ra',
+                                                'tags': '123abc'}))
         reply = json.loads(res.data.decode())
         self.assertEqual(res.status_code, 400)
-        self.assertTrue(
+        self.assertIn(
             "Title is too short. Please add more clarity", reply['message'])
-
+        
     def test_for_wrong_url(self):
         """Test whether the right url has been input"""
         payload = self.user_login()
