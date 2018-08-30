@@ -9,22 +9,22 @@ db = MyDatabase()
 
 class QuestionsModels:
 
-    def __init__(self,  title, description, tags):
+    def __init__(self,  title, description, tags, asked_by):
         self.Question_ID = uuid.uuid4().hex
-        self.title = title.strip("")
+        self.title = title.strip(" ")
         self.description = description.strip(" ")
         self.tags = tags.strip(" ")
-        self.answers = []
+        self.asked_by = asked_by
         self.time = datetime.datetime.now()
 
     def get_id(self):
         return self.Question_ID
 
     def create_question(self):
-        query = "SELECT * FROM QuestionTable WHERE Title = '{}'".format(
+        query = "SELECT * FROM QuestionTable WHERE title = '{}'".format(
             self.title)
 
-        if db.check_user_exists(query):
+        if db.check_item_exists(query):
             print(query)
             return {'Message': 'Question already exists'}, 400
 
@@ -33,10 +33,10 @@ class QuestionsModels:
         if validate:
             return validate
 
-        sql = "INSERT INTO QuestionTable values('{}','{}','{}','{}','{}')".format(
+        sql = "INSERT INTO QuestionTable values('{}','{}','{}','{}','{}','{}')".format(
             self.Question_ID, self.title, self.description, self.tags,
-            self.time)
-        return db.create_user(sql)
+            self.asked_by, self.time)
+        return db.create_item(sql)
 
     def to_questionjson(self):
         """
