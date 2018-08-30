@@ -34,14 +34,18 @@ class TestValidation(BaseTest):
 
     def test_if_symbols_are_input(self):
         """ Test whether the client has input data"""
-        res = self.client.post('/api/v1/auth/signup',
+        payload = self.user_login()
+        res = self.client.post('/api/v1/questions',
                                content_type='application/json',
-                               data={
-                                   'email': '@!#$$',
-                                   'password': '123abc'})
+                               headers=dict(
+                                   Authorization='Bearer ' + payload),
+                               data={'title': "  !@#$$#",
+                                     'description': 'rachael@sample.com',
+                                     'tags': '123abc'})
         reply = json.loads(res.data.decode())
         self.assertEqual(res.status_code, 400)
-        self.assertTrue("'Please  donot use symbols'", reply['message'])
+        self.assertTrue(
+            "Please do not use symbols", reply['message'])
 
     def test_if_fields_left_blank(self):
         payload = self.user_login()
@@ -67,4 +71,4 @@ class TestValidation(BaseTest):
                                    Authorization='Bearer ' + payload),
                                data=json.dumps(self.question))
         self.assertEqual(res.status_code, 404)
-        #self.assertIn('404 Not Found ', str(res.data))
+        self.assertTrue('404 Not Found ', str(res.data))
