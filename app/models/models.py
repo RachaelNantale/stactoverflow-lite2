@@ -28,6 +28,9 @@ class QuestionsModels:
         return self.Question_ID
 
     def create_question(self):
+        """This method creates the question. It first checks 
+        if the question already exists in the database in order to prevent
+        duplication"""
         query = "SELECT * FROM QuestionTable WHERE title = '{}'".format(
             self.title)
 

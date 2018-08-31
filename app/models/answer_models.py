@@ -7,6 +7,12 @@ db = MyDatabase()
 
 
 class AnswersModels:
+    """Answer model defines the parameters used in the Answer view.
+    param: Question_ID  - Defines the ID of the questio to which the answer belongs to
+    param: Answer_ID -  unique identifier of the answer
+    Param: answer - this is the body or description of the answer
+    Param: answered_by - defines the owner of the answer
+    Param created_ at Time of creation"""
     def __init__(self, answer, Question_ID, answered_by):
         self.Question_ID = Question_ID
         self.Answer_ID = uuid.uuid4().hex
@@ -25,6 +31,7 @@ class AnswersModels:
         }
 
     def create_answer(self):
+        """This method checks if the answer exists before creating the answer"""
         if db.check_answer_exists(self.Question_ID, self.answer):
             return {'Message': 'Answer already exists'}, 400
 

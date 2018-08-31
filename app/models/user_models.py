@@ -12,6 +12,9 @@ class UserModel():
         self.password = password.strip(" ")
 
     def create_user(self):
+        """This method creates a user. It first checks
+        if the user already exists in the database in order to prevent
+        duplication"""
 
         if db.fetch_user_by_email(self.email):
             return {'Message': 'User already exists'}, 400
@@ -25,6 +28,8 @@ class UserModel():
         return db.create_item(sql)
 
     def fetch_user(self, email):
+        """This method fetches the user in the database by
+        email if they exist"""
         validate = validate_user_input(self.email, self.password)
         if validate:
             return validate
