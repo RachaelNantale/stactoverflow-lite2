@@ -11,6 +11,8 @@ db = MyDatabase()
 
 
 class AnswerList(Resource):
+    """Represents the Answer API end point. It has the methods of 
+    POST, GET . it takes in parameters from the `AnswersModel` class """
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('answer', type=str, required=True,
@@ -21,18 +23,20 @@ class AnswerList(Resource):
 
     @jwt_required
     def post(self, Question_ID):
+        """This method creates a question wuth the parameter of answer"""
         args = self.reqparse.parse_args()
         logged_in_user = get_jwt_identity()
         my_answer = AnswersModels(args['answer'], Question_ID,
                                   logged_in_user)
-        # try:
-        created_answer = my_answer.create_answer()
-        return created_answer
-        # except Exception:
-        #     return {'message': 'An error occured.Please Make sure that the Question exists'}, 404
+        try:
+            created_answer = my_answer.create_answer()
+            return created_answer
+        except Exception:
+            return {'message': 'An error occured.Please Make sure that the Question exists'}, 404
 
     @jwt_required
     def get(self, Question_ID):
+        """This method gets all the answers created for a specific question"""
         try:
             question = db.fetch_all_answers(Question_ID)
             if question is not None:
@@ -44,6 +48,8 @@ class AnswerList(Resource):
 
 
 class Answers(Resource):
+    """Represents the Answer API end point. It has the methods of PUT.
+    It takes in parameters from the `AnswersModel` class """
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('answer', type=str, required=True,
@@ -52,6 +58,10 @@ class Answers(Resource):
 
     @jwt_required
     def put(self, Question_ID, Answer_ID):
+        """This method represents the PUT method. It updates an answer if the 
+        current logged in user is the answer owner. 
+        It also marks as preferred if the current logged in user 
+        is the question  owner"""
         try:
 
             args = self.reqparse.parse_args()
@@ -89,7 +99,7 @@ class Answers(Resource):
             return make_response(jsonify({"message": "Question doesnt exist"}), 400)
         except Exception as e:
             print(e)
-            return {'Message': 'Please check your Question or Answer'}
+            return {'Message': 'Please check your Question or Answer '}
 
 
 api.add_resource(AnswerList, '/api/v1/questions/<string:Question_ID>/answers')

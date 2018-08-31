@@ -8,6 +8,9 @@ api = Api(user_bp)
 
 
 class Signup(Resource):
+    """This Class Represents the SignUp endpoint.
+    It takes in params of email and password with method of POST"""
+
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('email', type=str,
@@ -35,7 +38,8 @@ class Signup(Resource):
 
 
 class Login(Resource):
-    """Login class"""
+    """This Class Represents the Login endpoint.
+    It takes in params of email and password with method of POST"""
 
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
