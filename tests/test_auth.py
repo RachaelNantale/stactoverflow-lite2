@@ -3,8 +3,6 @@ from Basetest import BaseTest
 from app.models.models import QuestionsModels
 from app.models.answer_models import AnswersModels
 from app.models.user_models import UserModel
-from app.views.views import Questions
-from app.views.answer_views import get_single_question
 
 
 class TestAll(BaseTest):
