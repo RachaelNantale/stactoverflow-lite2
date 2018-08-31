@@ -43,7 +43,7 @@ class AnswerList(Resource):
                 return jsonify({'message': question})
         except:
             return make_response(jsonify(
-                {'message': 'Sorry the question or answer doesnt exist'}
+                {'message': 'Sorry the question or answer doesnt exist'}, 404
             ))
 
 
@@ -99,7 +99,7 @@ class Answers(Resource):
             return make_response(jsonify({"message": "Question doesnt exist"}), 400)
         except Exception as e:
             print(e)
-            return {'Message': 'Please check your Question or Answer '}
+            return {'Message': 'Please check your Question or Answer '}, 404
 
 
 api.add_resource(AnswerList, '/api/v1/questions/<string:Question_ID>/answers')
