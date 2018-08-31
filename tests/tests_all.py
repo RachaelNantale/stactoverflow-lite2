@@ -148,5 +148,3 @@ class TestAll(BaseTest):
         reply = json.loads(res.data.decode())
         self.assertEqual(res.status_code, 400)
         self.assertIn('Question Id doesnt exist', reply['message'])
-
-    
