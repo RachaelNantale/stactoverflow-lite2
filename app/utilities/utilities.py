@@ -2,10 +2,11 @@ import re
 
 
 def validate_user_input(email, password=None):
+    """This function validates user input"""
 
     if not re.match(r"([\w\.-]+)@([\w\.-]+)(\.[\w\.]+$)", email):
         return {'message': 'Please input a valid email'}, 400
-    if len(password) < 5:
+    if len(password) < 7:
         return {'message': 'This password is not strong enough '}, 400
 
 
@@ -28,7 +29,7 @@ def validate_question_input(title, description, tags):
 
 
 def validate_answer_input(answer):
-    """ Function to validate data entered while creating a question """
+    """ Function to validate data entered while creating an answer """
     if len(answer) < 5 or answer == "":
         return {'message': 'Please use a valid answer input '}, 400
     if re.compile('[!@#$%^&*:;?><.]').match(answer):

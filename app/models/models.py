@@ -1,6 +1,5 @@
 import datetime
 import uuid
-import re
 from app.utilities.utilities import validate_question_input
 from DBHandler import MyDatabase
 
@@ -8,8 +7,16 @@ db = MyDatabase()
 
 
 class QuestionsModels:
+    """ This Class defines the Question model.
+    param: Question_id
+    param: title
+    param: description
+    param: tags
+    param: asked_by
+    param: time
+    """
 
-    def __init__(self,  title, description, tags, asked_by):
+    def __init__(self, title, description, tags, asked_by):
         self.Question_ID = uuid.uuid4().hex
         self.title = title.strip(" ")
         self.description = description.strip(" ")
@@ -21,6 +28,9 @@ class QuestionsModels:
         return self.Question_ID
 
     def create_question(self):
+        """This method creates the question. It first checks 
+        if the question already exists in the database in order to prevent
+        duplication"""
         query = "SELECT * FROM QuestionTable WHERE title = '{}'".format(
             self.title)
 

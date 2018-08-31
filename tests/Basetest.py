@@ -25,6 +25,7 @@ class BaseTest (unittest.TestCase):
                                                 'password': 'password'}))
 
         payload = json.loads(res.data.decode())
+
         return payload['token']
 
     def tearDown(self):

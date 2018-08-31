@@ -8,6 +8,9 @@ api = Api(user_bp)
 
 
 class Signup(Resource):
+    """This Class Represents the SignUp endpoint.
+    It takes in params of email and password with method of POST"""
+
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('email', type=str,
@@ -35,7 +38,8 @@ class Signup(Resource):
 
 
 class Login(Resource):
-    """Login class"""
+    """This Class Represents the Login endpoint.
+    It takes in params of email and password with method of POST"""
 
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
@@ -60,7 +64,8 @@ class Login(Resource):
             return make_response(jsonify({'message': 'user successful logged in',
                                           'token': access_token}))
 
-        return make_response(jsonify({'message': 'User not found.Please sign up'}), 400)
+        return make_response(jsonify({'message': 'User not found.Please sign up'}),
+                             400)
 
 
 api.add_resource(Signup, '/api/v1/auth/signup')

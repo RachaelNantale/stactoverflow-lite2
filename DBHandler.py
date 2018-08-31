@@ -89,17 +89,18 @@ class MyDatabase():
 
         self.cur.execute(
             "SELECT * FROM QuestionTable WHERE Question_ID = '{}' ".format(Question_ID))
-        question = self.cur.fetchall()
+        question = self.cur.fetchone()
         my_dict = {}
-        for question in question:
-            if question:
-                my_dict['Question_ID'] = question[0]
-                my_dict['title'] = question[1]
-                my_dict['description'] = question[2]
-                my_dict['tags'] = question[3]
-                my_dict['time'] = question[4]
-                return my_dict
-            return None
+
+        if question:
+            my_dict['Question_ID'] = question[0]
+            my_dict['title'] = question[1]
+            my_dict['description'] = question[2]
+            my_dict['tags'] = question[3]
+            my_dict['Answered By'] = question[4]
+            my_dict['time'] = question[5]
+            return my_dict
+        return None
 
     def fetch_single_question_by_id(self, Question_ID):
         self.cur.execute(

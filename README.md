@@ -1,6 +1,6 @@
 # stackoverflow-lite2
 [![Build Status](https://travis-ci.org/RachaelNantale/stactoverflow-lite2.svg?branch=tests)](https://travis-ci.org/RachaelNantale/stactoverflow-lite2)
-
+[![Coverage Status](https://coveralls.io/repos/github/RachaelNantale/stactoverflow-lite2/badge.svg?branch=ch-frector-tests)](https://coveralls.io/github/RachaelNantale/stactoverflow-lite2?branch=ch-frector-tests)
 
 ## Description
 The website serves as a platform for users to ask and answer questions, to vote questions and answers up or down and edit questions and answers.

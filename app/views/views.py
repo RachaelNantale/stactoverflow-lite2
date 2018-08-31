@@ -11,6 +11,8 @@ db = MyDatabase()
 
 
 class QuestionsList(Resource):
+    """Represents the Question API end point. It has the methods of 
+    POST, GET . it takes in parameters from the `QuestionsModels"""
 
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
@@ -27,6 +29,7 @@ class QuestionsList(Resource):
 
     @jwt_required
     def post(self):
+        """Method creates a question"""
         args = self.reqparse.parse_args()
         logged_in_user = get_jwt_identity()
         current_user = logged_in_user
@@ -41,6 +44,7 @@ class QuestionsList(Resource):
             return make_response(jsonify({'Message': 'An error occurred please try again'}), 400)
 
     def get(self):
+        """Gets all questions"""
         questions = db.fetch_all_questions()
         if len(questions) == 0:
             return {'message': 'Sorry no questions asked yet'}, 400
@@ -49,6 +53,9 @@ class QuestionsList(Resource):
 
 
 class Question(Resource):
+    """Represents the Questions API end point which need an Id to be 
+    passed in order to be triggered. It has the methods of GET, DELETE.
+    it takes in parameters from the `QuestionsModels` class """
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('title', type=str, required=True,
@@ -64,6 +71,7 @@ class Question(Resource):
 
     @jwt_required
     def get(self, Question_ID):
+        """Get a questin by Id"""
         question = db.fetch_single_question(Question_ID)
         if question is not None:
             return make_response(jsonify(question), 200)
@@ -73,6 +81,7 @@ class Question(Resource):
 
     @jwt_required
     def delete(self, Question_ID):
+       
         """Method for Deleting a Question"""
         try:
             delete_qtn = db.delete_record(Question_ID)
