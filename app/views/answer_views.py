@@ -95,7 +95,7 @@ class Answers(Resource):
                             Question_ID=Question_ID, Answer_ID=Answer_ID)
 
                         return jsonify({"message": update, "Updated answer": updated_answer})
-                return make_response(jsonify({"message": "Answer doesnt exist"}), 400)
+                return make_response(jsonify({"message": "Sorry, Cannot modify answer"}), 400)
             return make_response(jsonify({"message": "Question doesnt exist"}), 400)
         except Exception as e:
             print(e)
