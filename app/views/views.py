@@ -1,12 +1,13 @@
 
 from flask import Flask, make_response, jsonify, Blueprint, abort
 from flask_restful import Resource, Api, reqparse
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.models import QuestionsModels
-from app.utilities.utilities import validate_question_input
+from DBHandler import MyDatabase
 bp = Blueprint('app', __name__)
 api = Api(bp)
 
-Questions = []
+db = MyDatabase()
 
 
 class QuestionsList(Resource):
@@ -24,33 +25,27 @@ class QuestionsList(Resource):
                                    location='json')
         super(QuestionsList, self).__init__()
 
+    @jwt_required
     def post(self):
         args = self.reqparse.parse_args()
-        question = validate_question_input(args['title'], args['description'],
-                                           args['tags'])
+        logged_in_user = get_jwt_identity()
+        current_user = logged_in_user
 
-        if isinstance(question, QuestionsModels):
-            for Question in Questions:
-                if Question.title == args['title']:
-                    return make_response(jsonify({'message':
-                                                  'Question already exists'}
-                                                 ), 400)
-            Questions.append(question)
-            response = {
-                'Title': question.title,
-                'Description': question.description,
-                'Tags': question.tags
-            }
-            return make_response(jsonify(response), 201)
-        return question
+        question = QuestionsModels(args['title'], args['description'],
+                                   args['tags'], current_user)
+
+        try:
+            created_question = question.create_question()
+            return created_question
+        except Exception:
+            return make_response(jsonify({'Message': 'An error occurred please try again'}), 400)
 
     def get(self):
-        questions = [question.__dict__ for question in Questions]
+        questions = db.fetch_all_questions()
         if len(questions) == 0:
-            return make_response(jsonify(
-                {'message': 'Sorry no questions asked yet'}
-            ))
-        return make_response(jsonify(questions), 200)
+            return {'message': 'Sorry no questions asked yet'}, 400
+
+        return jsonify({'message': questions})
 
 
 class Question(Resource):
@@ -67,24 +62,23 @@ class Question(Resource):
                                    location='json')
         super(Question, self).__init__()
 
+    @jwt_required
     def get(self, Question_ID):
-        question = [
-            question.__dict__ for question in Questions if question.get_id() == Question_ID]
-        print(question)
-        if len(question) == 0:
-            return make_response(jsonify(
-                {'message': 'Sorry no questions asked yet'}
-            ))
-        return make_response(jsonify(question), 200)
+        question = db.fetch_single_question(Question_ID)
+        if question is not None:
+            return make_response(jsonify(question), 200)
+        return make_response(jsonify(
+            {'message': 'Sorry no questions asked yet'}
+        ))
 
+    @jwt_required
     def delete(self, Question_ID):
         """Method for Deleting a Question"""
-        delete_qtn = [
-            qtn for qtn in Questions if qtn.get_id() == Question_ID]
-        if len(delete_qtn) == 0:
-            abort(404)
-        Questions.remove(delete_qtn[0])
-        return {'message': 'Successfully deleted'}
+        try:
+            delete_qtn = db.delete_record(Question_ID)
+            return delete_qtn
+        except:
+            return{'message': 'Question ID doesnot exist'}
 
 
 api.add_resource(QuestionsList, '/api/v1/questions')

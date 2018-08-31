@@ -2,8 +2,6 @@ import json
 from Basetest import BaseTest
 from app.models.models import QuestionsModels
 from app.models.answer_models import AnswersModels
-# from app.views.views import Questions
-from app.views.answer_views import get_single_question
 from app.models.user_models import UserModel
 
 
@@ -15,7 +13,8 @@ class TestAll(BaseTest):
     }
 
     answer = {
-        'description': 'This is the answer description'
+        'Qustion_ID': '1',
+        'answer': 'This is the answer description'
     }
 
     def test_class_initializer(self):
@@ -23,41 +22,78 @@ class TestAll(BaseTest):
         questionmodel = QuestionsModels('html', 'this is a sample question',
                                         'programming')
         self.assertIsInstance(questionmodel, QuestionsModels)
-        answermodel = AnswersModels('this is a sample question')
+        answermodel = AnswersModels('1', 'this is a sample question')
         self.assertIsInstance(answermodel, AnswersModels)
         usermodel = UserModel('guest@email.com', 'password')
         self.assertIsInstance(usermodel, UserModel)
 
     def test_post_question(self):
         """Test API can post a question"""
+        payload = self.user_login()
         res = self.client.post('/api/v1/questions',
                                content_type='application/json',
+                               headers=dict(
+                                   Authorization='Bearer ' + payload),
                                data=json.dumps(self.question))
 
-        self.assertTrue(res.status_code, 201)
+        self.assertEqual(res.status_code, 201)
+        self.assertIn('Created succesfully', str(res.data))
 
     def test_get_all_questions(self):
         """Test API can view all questions"""
+        payload = self.user_login()
         res = self.client.get('api/v1/questions',
+                              headers=dict(
+                                  Authorization='Bearer ' + payload),
                               content_type='application/json')
         self.assertEqual(res.status_code, 200)
 
     def test_get_one_question(self):
         """Tests API can view only one question"""
+        payload = self.user_login()
         res = self.client.get('api/v1/questions/2',
+                              headers=dict(
+                                  Authorization='Bearer ' + payload),
                               content_type='application/json')
         self.assertEqual(res.status_code, 200)
 
-    def test_post_an_answer(self):
-        """Test API can post_an_answer"""
+    # def test_post_an_answer(self):
+    #     """Test API can post_an_answer"""
+    #     payload = self.user_login()
+    #     self.client.post('/api/v1/questions',
+    #                      content_type='application/json',
+    #                      headers=dict(
+    #                          Authorization='Bearer ' + payload),
+    #                      data=json.dumps(self.question))
+    #     self.client.get('api/v1/questions/1',
+    #                     headers=dict(
+    #                         Authorization='Bearer ' + payload),
+    #                     content_type='application/json'),
+
+    #     res = self.client.post('api/v1/questions/1/answers',
+    #                            content_type='application/json',
+    #                            headers=dict(
+    #                                Authorization='Bearer ' + payload),
+    #                            data=json.dumps(self.answer))
+    #     self.assertEquals(res.status_code, 201)
+    #     self.assertIn('Created succesfully', str(res.data))
+
+    def test_fetch_answers_by_qtnid(self):
+        """Test API can fetch an answer by question id"""
+        payload = self.user_login()
         self.client.post('/api/v1/questions',
                          content_type='application/json',
+                         headers=dict(
+                             Authorization='Bearer ' + payload),
                          data=json.dumps(self.question))
         self.client.get('api/v1/questions/1',
-                        content_type='application/json')
-        res = self.client.post('api/v1/questions/1/answers',
-                               content_type='application/json',
-                               data=json.dumps(self.answer))
-        self.assertTrue(res.status_code, 201)
+                        headers=dict(
+                            Authorization='Bearer ' + payload),
+                        content_type='application/json'),
 
-
+        res = self.client.get('api/v1/questions/1/answers',
+                              content_type='application/json',
+                              headers=dict(
+                                  Authorization='Bearer ' + payload),
+                              data=json.dumps(self.answer))
+        self.assertEqual(res.status_code, 200)
