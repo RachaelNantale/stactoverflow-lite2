@@ -8,8 +8,10 @@ class MyDatabase():
     def __init__(self):
         try:
             self.connection = psycopg2.connect(
-                dbname='stackoverflow', user='postgres', host='localhost',
-                password='oscarkirex', port='5432')
+                dbname='stackoverflow', user='kjwqnbkafyfvjj', 
+                host='ec2-54-235-86-226.compute-1.amazonaws.com',
+                password='36c6b8a997383f9a1072535f5163d1ed58b581366fe4ffd43a560083d9086f47',
+                port='5432')
 
             self.connection.autocommit = True
             self.cur = self.connection.cursor()
