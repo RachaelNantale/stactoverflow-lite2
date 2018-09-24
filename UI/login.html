@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="asserts/login.css" >
+    <title>StackOverFlow-lite</title>
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>Stack Overflow-lite</h1>
+        <div class="form form1" >
+            <form id="signupForm">
+                    <p class="form_label">SIGNUP FORM</p>
+                   
+                    <p>
+                        <input type="email" placeholder="Enter Email" id="email" required>
+                    </p>
+                    <p>
+                        <input type="password" placeholder="**********" id="password">
+                    </p>
+                    <p>
+                        <input type="submit" value="SIGNUP">
+                    </p>
+            </form>
+            </div>
+            <div class="form form2" >
+                    <p class="form_label">LOGIN FORM</p>
+                    <form id="loginForm">
+                        <p>
+                            <input type="email" placeholder="Enter Email" id="loginEmail" required>
+                        </p>
+                        <p>
+                            <input type="password" placeholder="**********" id="loginPassword" required>
+                        </p>
+                        <p>
+                            <input type="submit" value="LOGIN" formaction="index.html">
+                        </p>
+                    </form>
+                </div>
+            </div>
+<!-- Scripts for js -->
+<script type="text/javascript">
+    document.getElementById('signupForm').addEventListener('submit', signupForm);
+    document.getElementById('loginForm').addEventListener('submit', loginForm);
+
+    // function for signup fetch api
+
+    function signupForm(e){
+        e.preventDefault();
+        let email = document.getElementById('email').value;
+        let password = document.getElementById('password').value;
+
+
+        fetch('http://127.0.0.1:5000/api/v1/auth/signup',
+        {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, */*',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({email:email,password:password})
+        })
+        .then((response) => response.json())
+        .then((data) => { console.log(data)
+            if (data.message === 'Created successfully') {
+                alert('Thank you for registering...');
+            } else if (data.message === 'User not found. Please sign up') {
+                alert('Incorrect password or email');
+            } else if (data.message === 'User already exists') {
+                alert("An account with this (" + email + ") email exists!")
+            } else if (data.message === 'This password is not strong enough') {
+                alert('Your password is too short')
+            } else {
+                alert(data.message)
+            }
+            
+            //window.location.replace("index.html");
+
+        })
+    }
+        
+
+
+    // function for login form
+    function loginForm(e){
+        e.preventDefault();
+        let email = document.getElementById('loginEmail').value;
+        let password = document.getElementById('loginPassword').value;
+      
+
+        fetch('http://127.0.0.1:5000/api/v1/auth/login',
+        {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({email,password})
+            
+        })
+        .then((response) => response.json())
+        .then((data) => {console.log(data);
+                        token = data.access_token;
+                        // console.log(token);
+                        // localStorage.setItem('token', token)
+                        // console.log(localStorage.getItem('token'));
+                        //window.location.href = "index.html"
+                        if (typeof(Storage) !== "undefined") {
+                           localStorage.setItem("access_token", data.access_token);
+                           localStorage.setItem("full_name", data.full_name);
+                           alert('successfully logged in');
+                           window.location.replace("index.html");
+                        }
+                        else
+                           alert("No Support for Web Storage");
+            })
+    }
+
+</script>
+</body>
+<footer>&copy StackOverFlow-lite
+</footer>
+</html>
