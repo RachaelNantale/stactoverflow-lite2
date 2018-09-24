@@ -66,7 +66,7 @@
         <div class="questions">
                 <div class="qtn-field">
                     <div class="qtn-asked">
-                        <div id="getQuestions"></div>
+                        <div id="outputs"> </div>
                     </div>
                 </div>
         </div>
@@ -91,28 +91,29 @@
         </div>
     </section>
      <script>
-        document.getElementById('getQuestions').addEventListener('click', getQuestions)
-
-        function getQuestions() {
-            fetch('http://127.0.0.1:5000/api/v1/questions')
+     fetch('http://127.0.0.1:5000/api/v1/questions')
                  .then((response) => response.json())
                  .then((data) => {
-                     let output = '';
-                     data.message.forEach(function (questions) {
-                         output += `
-                       <div>
-                      <h3> Title: ${questions.title}</h3>
-                      <p> Description: ${questions.description}</p>
-                      <p> Tags: ${questions.tags}</p>
-                      <hr>
-
-                      </div>
-                      `;
-                     });
-                    document.getElementById('output').innerHTML = output;
+                    let outputs = '<h2> Top Questions </h2>';
+                    data.message.forEach(function (questions) {
+                        outputs += `
+                    <div>
+                    <h3  onclick="getSingleQuestion(${questions.Question_ID})"> Title: ${questions.title}<h3>
+                    <p> Description: ${questions.description}</p>
+                    <p> Tags: ${questions.tags}</p>
+                    <hr>
                     
-               });
-        }
+                    </div>
+                        `;
+                    });
+                    document.getElementById('outputs').innerHTML = outputs;
+                    })
+   
+
+     
+     
+
+     
     </script>
 
 

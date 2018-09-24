@@ -67,19 +67,18 @@
         })
         .then((response) => response.json())
         .then((data) => { console.log(data)
-            if (data.message === 'Created successfully') {
+            if (data.message === "Created successfully") {
                 alert('Thank you for registering...');
-            } else if (data.message === 'User not found. Please sign up') {
-                alert('Incorrect password or email');
-            } else if (data.message === 'User already exists') {
+            } else if (data.message === "User not found. Please sign up") {
+                alert("Incorrect password or email");
+            } else if (data.message === "User already exists") {
                 alert("An account with this (" + email + ") email exists!")
-            } else if (data.message === 'This password is not strong enough') {
-                alert('Your password is too short')
+            } else if (data.message === "This password is not strong enough") {
+                alert("Your password is too short")
             } else {
                 alert(data.message)
             }
             
-            //window.location.replace("index.html");
 
         })
     }
@@ -105,19 +104,20 @@
         })
         .then((response) => response.json())
         .then((data) => {console.log(data);
-                        token = data.access_token;
-                        // console.log(token);
-                        // localStorage.setItem('token', token)
-                        // console.log(localStorage.getItem('token'));
-                        //window.location.href = "index.html"
-                        if (typeof(Storage) !== "undefined") {
-                           localStorage.setItem("access_token", data.access_token);
-                           localStorage.setItem("full_name", data.full_name);
-                           alert('successfully logged in');
-                           window.location.replace("index.html");
+                        token = data.token;
+                        console.log(token);
+                        localStorage.setItem('token', token)
+                        if (data.message === "User not found.Please sign up") {
+                            alert("Incorrect password or email");
+                            window.location.replace("login.html")}
+                        else if(data.message === "user successful logged in"){
+                            alert("sucessfully logged in");
+                            window.location.replace("index.html")
                         }
-                        else
-                           alert("No Support for Web Storage");
+                        else {
+                            (data.message)
+                        }
+                        
             })
     }
 
