@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible">
+    <link rel="stylesheet" href="asserts/main.css">
+    <title>StackOverflow</title>
+
+
+</head>
+
+<body>
+    <header>
+        <h2>Stack Overflow-lite</h2>
+        <input type="text" placeholder="Search..">
+    </header>
+
+    <section>
+        <nav>
+            <ul>
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+                <li>
+                    <a href="questions.html">Profile</a>
+                </li>
+                <li>
+                    <a href="login.html">Logout</a>
+                </li>
+               
+
+            </ul>
+        </nav>
+                
+        <article>
+        <button id="getQuestions" class="btn-1">Top Questions</button>
+            <h1>Ask A Question</h1>
+            <form id="askQuestion">
+        <label>Title</label><br>
+        <input type="text" class="input-fields" placeholder="What's your programming question. Be specific" id="title"><br><br>
+        <label>Body</label><br>
+        <textarea rows="7" cols="14" id="description"></textarea><br><br>
+        <label>Tags</label><br>
+        <input type="text" class="input-fields" placeholder="Atleast one tag" id="tags"><br><br>
+        <button type="submit" class="btn" formaction="questions.html">Post Your Question </button>
+
+        
+    </form>
+    </article>
+
+        <div class="seconddiv">
+                <div id="output" class="innerdiv"> </div>
+            </div>
+    </section>
+    <script>
+        document.getElementById('getQuestions').addEventListener('click', getQuestions)
+        document.getElementById('askQuestion').addEventListener('submit', askQuestion);
+
+        function getQuestions() {
+            fetch('http://127.0.0.1:5000/api/v1/questions')
+                 .then((response) => response.json())
+                 .then((data) => {
+                     let output = '<h2> My Questions </h2>';
+                     data.message.forEach(function (questions) {
+                         output += `
+                      <div>
+                      <h3> Title: ${questions.title}</h3>
+                      <p> Description: ${questions.description}</p>
+                      <p> Tags: ${questions.tags}</p>
+                      <hr>
+
+                      </div>
+                         `;
+                     });
+                    document.getElementById('output').innerHTML = output;
+                    
+               });
+        }
+
+        function askQuestion(e){
+            e.preventDefault();
+            let title = document.getElementById('title').value;
+            let description = document.getElementById('description').value;
+            let tags = document.getElementById('tags').value;
+            let payload = localStorage.getItem('token');
+            console.log(localStorage.getItem('token'));
+    
+            fetch('http://127.0.0.1:5000/api/v1/questions',
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, */*',
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${payload}`
+                },
+                mode: 'cors',
+                body: JSON.stringify({title:title, description:description, tags:tags})
+            })
+            .then((response) => response.json())
+            .then((data) => console.log(data));
+            alert('Question posted succesfully');
+            window.location.replace('index.html')
+            //let token = data.access_token;
+            //console.log(token);
+            //localStorage.setItem('token', token)
+            //window.location.href = "index.html"
+            //})
+        }
+
+    </script>
+    <footer>
+        <p>&copy; StackOverflow</p>
+    </footer>
+
+</body>
+
+</html>
