@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from app.views.views import bp
 from app.views.answer_views import answer_bp
 from app.views.user_views import user_bp
@@ -15,6 +16,7 @@ def create_app(config_name):
     is created from"""
 
     app = Flask(__name__)
+    CORS(app)
     app.config['JWT_SECRET_KEY'] = 'sup3rsecr3t'
     JWTManager(app)
 

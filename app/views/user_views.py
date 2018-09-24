@@ -55,14 +55,16 @@ class Login(Resource):
         """
         args = self.reqparse.parse_args()
         user = UserModel(args['email'], args['password'])
-        logged_in_user = user.fetch_user(args['email'])
+        logged_in_user = user.fetch_user(args['email'], args['password'])
 
         if logged_in_user is not None:
-            expires = datetime.timedelta(days=1)
-            access_token = create_access_token(identity=args['email'],
-                                               expires_delta=expires)
-            return make_response(jsonify({'message': 'user successful logged in',
-                                          'token': access_token}))
+            if user.email == args['email'] and user.password == args['password']:
+                expires = datetime.timedelta(days=1)
+                access_token = create_access_token(identity=args['email'],
+                                                   expires_delta=expires)
+                return make_response(jsonify({'message': 'user successful logged in',
+                                              'token': access_token}))
+            return make_response(jsonify({'message': 'Incorrect password or username'}), 400)
 
         return make_response(jsonify({'message': 'User not found.Please sign up'}),
                              400)

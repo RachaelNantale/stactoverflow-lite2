@@ -27,13 +27,13 @@ class UserModel():
             self.User_ID, self.email, self.password)
         return db.create_item(sql)
 
-    def fetch_user(self, email):
+    def fetch_user(self, email, password):
         """This method fetches the user in the database by
         email if they exist"""
         validate = validate_user_input(self.email, self.password)
         if validate:
             return validate
 
-        sql = "SELECT * FROM UserTable WHERE email = '{}'".format(
-            self.email)
+        sql = "SELECT * FROM UserTable WHERE email = '{}' and password = '{}'".format(
+            self.email, self.password)
         return db.fetch_user(sql)

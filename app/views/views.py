@@ -27,7 +27,7 @@ class QuestionsList(Resource):
                                    location='json')
         super(QuestionsList, self).__init__()
 
-    @jwt_required
+    # @jwt_required
     def post(self):
         """Method creates a question"""
         args = self.reqparse.parse_args()
