@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible">
+    <link rel="stylesheet" href="asserts/main.css">
+    <title>StackOverflow</title>
+
+
+</head>
+
+<body>
+    <header>
+        <h2>Stack Overflow-lite</h2>
+        <input type="text" placeholder="Search..">
+    </header>
+
+    <section>
+        <nav>
+            <ul>
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+                <li>
+                    <a href="questions.html">Profile</a>
+                </li>
+                <li>
+                    <a href="create_question.html">Ask a Question</a>
+                </li>
+                <li>
+                    <a href="signup.html">Logout</a>
+                </li>
+
+            </ul>
+        </nav>
+
+
+        <article>
+            <h1> My Questions</h1>
+            <input type="text" placeholder="Search..">
+
+            <!-- <div class="questions">
+                <div class="qtn-field">
+                    <div class="qtn-asked">
+                        <a href="add_answers.html">Which companies in uganda have Data scientists Lorem ipsum dolor, sit amet consectetur adipisicing
+                            elit. Recusandae eum molestiae esse qui sapiente adipisci libero doloribus eaque in explicabo
+                            nostrum, reiciendis nam obcaecati voluptatem accusamus facere, assumenda hic cumque.</a>
+                    </div>
+                    <div class="author">Answered by
+                        <a href="#">RachaelM</a>
+                    </div>
+                    <div class="answer">I think almost all companies Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure, non perspiciatis.
+                        Nemo qui, doloribus fuga animi assumenda nobis rem sapiente tenetur officia similique quidem blanditiis
+                        alias, iure mollitia, ducimus excepturi?Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                        Excepturi exercitationem expedita est. Mollitia fuga veniam quibusdam doloremque quisquam magnam
+                        maxime illum minus et nihil, tempore sunt expedita corporis? Laborum, nobis.</div>
+                    <div class="qtn-tags">
+                        <h1 class="tags" id="yay">Upvote</h1>
+                        <h1 class="tags" id="nay">Downvote</h1>
+                    </div>
+                    <input type="text" placeholder="Add comment">
+                    <button class="btn-1" id="btn-1-delete" formaction="#">Delete Question</button>
+                    <button class="btn-1" id="btn-1-submit" formaction="#">Submit</button> -->
+        <div class="questions">
+                <div class="qtn-field">
+                    <div class="qtn-asked">
+                        <div id="getQuestions"></div>
+                    </div>
+                </div>
+        </div>
+        </article>
+        <div class="seconddiv">
+            <div class="innerdiv">
+                <h2>Profile</h2>
+                <hr>
+                <img src="asserts/index.jpeg" alt="Profile Picture">
+                <p><a href="#">Add profile credential</a></p>
+                <p><a href="#">Write a description about yourself</a> </p>
+                <p>Followers: 34</p>
+                <hr>
+                <p><a href="#">Questions (39)</a></p>
+                <hr>
+                <p><a href="#" id="answerz">Answers (17)</a></p>
+                <hr>
+                <p>Votes (20)</p>
+                <hr>
+                <p>Approved Answers (7)</p>
+            </div>
+        </div>
+    </section>
+     <script>
+        document.getElementById('getQuestions').addEventListener('click', getQuestions)
+
+        function getQuestions() {
+            fetch('http://127.0.0.1:5000/api/v1/questions')
+                 .then((response) => response.json())
+                 .then((data) => {
+                     let output = '';
+                     data.message.forEach(function (questions) {
+                         output += `
+                       <div>
+                      <h3> Title: ${questions.title}</h3>
+                      <p> Description: ${questions.description}</p>
+                      <p> Tags: ${questions.tags}</p>
+                      <hr>
+
+                      </div>
+                      `;
+                     });
+                    document.getElementById('output').innerHTML = output;
+                    
+               });
+        }
+    </script>
+
+
+    <footer>
+        <p>&copy; StackOverflow</p>
+    
+
+    </footer>
+
+</body>
+
+</html>
