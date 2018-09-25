@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible">
+    <link rel="stylesheet" href="asserts/main.css">
+    <title>StackOverflow</title>
+
+
+</head>
+
+<body>
+    <header>
+        <h2>Stack Overflow-lite</h2>
+        <input type="text" placeholder="Search..">
+    </header>
+
+    <section>
+        <nav>
+            <ul>
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+                <li>
+                    <a href="questions.html">Profile</a>
+                </li>
+                <li>
+                    <a href="signup.html">Logout</a>
+                </li>
+
+            </ul>
+        </nav>
+
+    <article>
+            <div class="questions">
+                <div class="qtn-field">
+                    <div class="qtn-asked">
+                        <div id="outputs"><a href="#"></a>
+                    </div>
+                    </div>
+                    <!-- <div class="answer" id="answer"></div> -->
+                    </div>
+                    <!-- <div class="qtn-tags">
+                        <h1 class="tags" id="yay">Upvote</h1>
+                        <h1 class="tags" id="nay">Downvote</h1>
+                    </div> -->
+                    <form id="answerQuestion">
+                    <textarea id="answer">Please add your answer here </textarea>
+
+                    <button class="btn-1" id="btn-2-submit" formaction="#">Submit</button>
+                </form>
+                </div>
+
+
+
+
+        </article>
+ <script type="text/javascript">
+    let Question_ID = localStorage.getItem('Question_ID');
+    let payload = localStorage.getItem('token');
+    
+
+     fetch('http://127.0.0.1:5000/api/v1/questions/' + Question_ID,
+            {
+            method: 'GET',
+            headers: {
+                "Accept": "application/json, */*",
+                "Content-type": "application/json",
+                "Authorization": `Bearer ${payload}`
+            }
+
+        })
+                 .then((response) => response.json())
+                 .then((data) => {
+                    console.log(data)
+                    let outputs = '';
+                    data.forEach(function (questions) {
+                        // console.log(data)
+                        // console.log('this is the answer page')
+                        
+                        outputs += `
+                    <div>
+                     <h4>${questions.title}</h4>
+                    <p> Description: ${questions.description}</p>
+                    <p> Tags: ${questions.tags}</p>
+                    <p> Asked at: ${questions.time}</p> 
+                    </div>
+                        `;
+                    console.log('bad company1')
+                    });
+                    document.getElementById('outputs').innerHTML = outputs;
+                    })
+                    console.log('bad company2')
+
+     //Function for answer question
+    document.getElementById('answerQuestion').addEventListener('submit', answerQuestion);                
+    function answerQuestion(e){
+            e.preventDefault();
+            let answer = document.getElementById('answer').value;
+            let payload = localStorage.getItem('token');
+            let Question_ID = localStorage.getItem('Question_ID');
+            console.log(Question_ID)
+
+            
+    
+            fetch(`http://127.0.0.1:5000/api/v1/questions/${localStorage.getItem("Question_ID")}/answers`,
+            {
+
+                method: 'POST',
+                headers: {
+                    "Accept": "application/json, */*",
+                    "Content-type": "application/json",
+                    "Authorization": `Bearer ${payload}`
+                },
+                body: JSON.stringify({answer:answer})
+            })
+            .then((response) => response.json())
+            .then((data) => {console.log(data)
+                if (data.message === "Created succesfully") {
+                    alert('Answer created succesfully');
+                    window.location.href='getanswers.html';
+                    }
+                else if(data.Message === "Answer already exists"){
+                    alert("Sorry answer already given");
+                }
+
+                else {alert(data.message)}
+            })
+            // console.log(localStorage.setItem("Answer_ID", Answer_ID));
+
+            }
+
+
+</script>
+
+</body>
+
+</html>
