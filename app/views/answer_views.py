@@ -28,11 +28,11 @@ class AnswerList(Resource):
         logged_in_user = get_jwt_identity()
         my_answer = AnswersModels(args['answer'], Question_ID,
                                   logged_in_user)
-        try:
-            created_answer = my_answer.create_answer()
-            return created_answer
-        except Exception:
-            return {'message': 'An error occured.Please Make sure that the Question exists'}, 404
+        # try:
+        created_answer = my_answer.create_answer()
+        return created_answer
+        # except Exception:
+        #     return {'message': 'An error occured.Please Make sure that the Question exists'}, 404
 
     @jwt_required
     def get(self, Question_ID):
