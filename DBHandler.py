@@ -24,21 +24,21 @@ class MyDatabase():
         self.cur.execute(Users_table)
 
         questions_table = """CREATE TABLE IF NOT EXISTS QuestionTable
-        (Question_ID TEXT PRIMARY KEY, Title TEXT NOT NULL UNIQUE,
+        (Title TEXT NOT NULL UNIQUE,
         body varchar(50) NOT NULL, tags varchar(50) NOT NULL,
         asked_by varchar(50) NOT NULL,
-        created_at TIMESTAMP)"""
+        created_at TIMESTAMP,Question_ID SERIAL PRIMARY KEY, QtnID SERIAL)"""
         self.cur.execute(questions_table)
 
         answers_table = """CREATE TABLE IF NOT EXISTS AnswerTable
-        (Answer_ID TEXT PRIMARY KEY,
-        created_at TIMESTAMP,
-        Answer TEXT NOT NULL UNIQUE,
-        Question_ID TEXT, FOREIGN KEY(Question_ID)
+        (created_at TIMESTAMP,
+        Answer TEXT NOT NULL,
+        Question_ID SERIAL, FOREIGN KEY(Question_ID)
         REFERENCES QuestionTable(Question_ID)
         ON DELETE CASCADE ON UPDATE CASCADE,
         answered_by varchar(50) NOT NULL,
-        status bool DEFAULT False
+        status bool DEFAULT False,
+        Answer_ID SERIAL PRIMARY KEY
 
         ) """
         self.cur.execute(answers_table)
@@ -75,12 +75,12 @@ class MyDatabase():
         my_questions = []
         for question in questions:
             my_dict = {}
-            my_dict['Question_ID'] = question[0]
-            my_dict['title'] = question[1]
-            my_dict['description'] = question[2]
-            my_dict['tags'] = question[3]
-            my_dict['Asked By'] = question[4]
-            my_dict['Time'] = question[5]
+            my_dict['Question_ID'] = question[5]
+            my_dict['title'] = question[0]
+            my_dict['description'] = question[1]
+            my_dict['tags'] = question[2]
+            my_dict['Asked By'] = question[3]
+            my_dict['Time'] = question[4]
 
             my_questions.append(my_dict)
         return my_questions
@@ -90,16 +90,17 @@ class MyDatabase():
         self.cur.execute(
             "SELECT * FROM QuestionTable WHERE Question_ID = '{}' ".format(Question_ID))
         question = self.cur.fetchone()
-        my_dict = {}
-
+        my_question = []
         if question:
-            my_dict['Question_ID'] = question[0]
-            my_dict['title'] = question[1]
-            my_dict['description'] = question[2]
-            my_dict['tags'] = question[3]
-            my_dict['Answered By'] = question[4]
-            my_dict['time'] = question[5]
-            return my_dict
+            my_dict = {}
+            my_dict['Question_ID'] = question[5]
+            my_dict['title'] = question[0]
+            my_dict['description'] = question[1]
+            my_dict['tags'] = question[2]
+            my_dict['Asked  By'] = question[3]
+            my_dict['time'] = question[4]
+            my_question.append(my_dict)
+            return my_question
         return None
 
     def fetch_single_question_by_id(self, Question_ID):
@@ -150,21 +151,21 @@ class MyDatabase():
         for index in range(len(answers)):
             user_answers = (
                 {
-                    'Answer_ID': answers[index][0],
-                    'created at': answers[index][1],
-                    'answer': answers[index][2],
-                    'Answered by': answers[index][4],
-                    'Status': answers[index][5]
+                    'Answer_ID': answers[index][5],
+                    'created at': answers[index][0],
+                    'answer': answers[index][1],
+                    'Answered by': answers[index][3],
+                    'Status': answers[index][4]
 
                 })
             my_answers.append(user_answers)
-        return {'Question': {'title': question[1],
+        return [             {'title': question[1],
                              'Description': question[2],
                              'tags': question[3],
                              'answers': my_answers,
                              'Asked by': question[4]
 
-                             }}
+                             }]
 
     def update_answer(self, answer, Answer_ID, Question_ID):
         try:
@@ -209,3 +210,9 @@ class MyDatabase():
 if __name__ == '__main__':
     db = MyDatabase()
     db.create_tables()
+    
+
+
+    
+    
+    
