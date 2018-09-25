@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible">
+    <link rel="stylesheet" href="asserts/main.css">
+    <title>StackOverflow</title>
+
+
+</head>
+
+<body>
+    <header>
+        <h2>Stack Overflow-lite</h2>
+        <input type="text" placeholder="Search..">
+    </header>
+
+    <section>
+        <nav>
+            <ul>
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+                <li>
+                    <a href="questions.html">Profile</a>
+                </li>
+                <li>
+                    <a href="signup.html">Logout</a>
+                </li>
+
+            </ul>
+        </nav>
+
+
+        <article>
+            <h1> My Questions</h1>
+            <input type="text" placeholder="Search..">
+        <div class="questions">
+                <div class="qtn-field">
+                    <div class="qtn-asked">
+                        <div id="ans-outputs"> </div>
+                    </div>
+                </div>
+        </div>
+        </article>
+        <script type="text/javascript">
+        let payload = localStorage.getItem('token');
+        console.log('muntu wa wansi')
+     fetch(`http://127.0.0.1:5000/api/v1/questions/${localStorage.getItem("Question_ID")}/answers`,
+         {
+            method: 'GET',
+            headers: {
+                "Accept": "application/json, */*",
+                "Content-type": "application/json",
+                "Authorization":`Bearer ${payload}`
+                
+            }
+        })
+                 .then((response) => response.json())
+                 .then((data) => {
+                      let output = '<h2> Answers</h2>';
+                       
+                        }
+                        document.getElementById('ans-outputs').innerHTML = output;
+
+                        
+                            });
+
+
+
+                    // let MyQuestion = data["Your_question_is"][0]["Question"]
+                    // let answer = data["Your_question_is"]
+                    // if(answer && answer.length ){
+                    //         for(i=0; i<answer.length; i++){
+                    //         let myanswer = (answer[i]["Answer"])
+                    //         let status = (answer[i]["Prefered_Ans_Status"])
+                    //         output += `
+                    //         <hr>
+                    //         <ul class="questions">
+                    //             <li>${MyQuestion}</li>
+                    //         </ul>
+                    //         <hr>
+                    //         <ul class="questions">
+                    //             <li>${myanswer}</li>
+                    //             <li>Prefered_Ans_Status:  <button placeholder="Status">${status}</button></li>
+                    //         </ul>`
+                    
+                     // for (dict in data){
+                     //    console.log(dict);
+                     //    console.log(data[dict]);
+                     // };
+                        // for key, value in dict.items(){
+                        //     console.log(key);
+                        //     console.log(value);
+
+                        // }
+                    //         for list_item in value:
+                    //             for key, value in dict.items()
+                   
+
+
+                    
+</script>
+</body>
+</html>
