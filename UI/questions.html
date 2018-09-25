@@ -27,9 +27,6 @@
                     <a href="questions.html">Profile</a>
                 </li>
                 <li>
-                    <a href="create_question.html">Ask a Question</a>
-                </li>
-                <li>
                     <a href="signup.html">Logout</a>
                 </li>
 
@@ -40,33 +37,11 @@
         <article>
             <h1> My Questions</h1>
             <input type="text" placeholder="Search..">
-
-            <!-- <div class="questions">
-                <div class="qtn-field">
-                    <div class="qtn-asked">
-                        <a href="add_answers.html">Which companies in uganda have Data scientists Lorem ipsum dolor, sit amet consectetur adipisicing
-                            elit. Recusandae eum molestiae esse qui sapiente adipisci libero doloribus eaque in explicabo
-                            nostrum, reiciendis nam obcaecati voluptatem accusamus facere, assumenda hic cumque.</a>
-                    </div>
-                    <div class="author">Answered by
-                        <a href="#">RachaelM</a>
-                    </div>
-                    <div class="answer">I think almost all companies Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure, non perspiciatis.
-                        Nemo qui, doloribus fuga animi assumenda nobis rem sapiente tenetur officia similique quidem blanditiis
-                        alias, iure mollitia, ducimus excepturi?Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                        Excepturi exercitationem expedita est. Mollitia fuga veniam quibusdam doloremque quisquam magnam
-                        maxime illum minus et nihil, tempore sunt expedita corporis? Laborum, nobis.</div>
-                    <div class="qtn-tags">
-                        <h1 class="tags" id="yay">Upvote</h1>
-                        <h1 class="tags" id="nay">Downvote</h1>
-                    </div>
-                    <input type="text" placeholder="Add comment">
-                    <button class="btn-1" id="btn-1-delete" formaction="#">Delete Question</button>
-                    <button class="btn-1" id="btn-1-submit" formaction="#">Submit</button> -->
         <div class="questions">
                 <div class="qtn-field">
                     <div class="qtn-asked">
                         <div id="outputs"> </div>
+
                     </div>
                 </div>
         </div>
@@ -90,28 +65,81 @@
             </div>
         </div>
     </section>
-     <script>
+     <script type="text/javascript">
      fetch('http://127.0.0.1:5000/api/v1/questions')
                  .then((response) => response.json())
                  .then((data) => {
                     let outputs = '<h2> Top Questions </h2>';
                     data.message.forEach(function (questions) {
+                        console.log(questions)
+                        
                         outputs += `
                     <div>
-                    <h3  onclick="getSingleQuestion(${questions.Question_ID})"> Title: ${questions.title}<h3>
+                     <h2  onclick="getSingleQuestion(${questions.Question_ID})">${questions.title}</h2>
+                   
                     <p> Description: ${questions.description}</p>
                     <p> Tags: ${questions.tags}</p>
+                    <a href="#" onclick="deleteQuestion(${questions.Question_ID})">Delete</a>
                     <hr>
                     
                     </div>
                         `;
+
                     });
+
                     document.getElementById('outputs').innerHTML = outputs;
                     })
-   
 
-     
-     
+   
+    //function for getting a single question
+        let payload = localStorage.getItem('token'); 
+
+        function getSingleQuestion(Question_ID){
+            console.log('this is baddd');
+
+        fetch("http://127.0.0.1:5000/api/v1/questions/" + Question_ID,
+        {
+            method: 'GET',
+            headers: {
+                "Accept": "application/json, */*",
+                "Content-type": "application/json",
+                "Authorization": `Bearer ${payload}`
+            }
+        })
+       .then((response) => response.json())
+       .then((data) => {
+                console.log(data)
+                alert('Wanna answer this question?')
+                window.location.href="answers.html"
+                })
+                localStorage.setItem("Question_ID", Question_ID);       
+    }
+
+    // function for deletea question
+        // let payload = localStorage.getItem('token'); 
+     function deleteQuestion(Question_ID){
+            console.log('this is delete');
+        fetch("http://127.0.0.1:5000/api/v1/questions/" + Question_ID,
+        {
+            method: 'DELETE',
+            headers: {
+                "Accept": "application/json, */*",
+                "Content-type": "application/json",
+                "Authorization": `Bearer ${payload}`
+            }
+        })
+       .then((response) => response.json())
+       .then((data) => {
+                console.log(data)
+                alert('Are you sure you want to delete')
+                window.location.reload()
+                })
+                       
+    }
+
+       
+
+      
 
      
     </script>
