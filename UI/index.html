@@ -63,13 +63,16 @@
             fetch('http://127.0.0.1:5000/api/v1/questions')
                  .then((response) => response.json())
                  .then((data) => {
+                    
+
                     let output = '<h2> Top Questions </h2>';
                     data.message.forEach(function (questions) {
                         output += `
                     <div>
-                    <h3  onclick="getSingleQuestion(${questions.Question_ID})"> Title: ${questions.title}<h3>
+                    <h3><a href='#'> Title: ${questions.title}</a><h3>
                     <p> Description: ${questions.description}</p>
                     <p> Tags: ${questions.tags}</p>
+                    <p> Tags: ${questions.current_user}</p>
                     <hr>
                     
                     </div>
@@ -80,8 +83,8 @@
                });
         }
 
-        let url = "http://127.0.0.1:5000/api/v1/questions";
-        fetch(url,
+        
+        fetch('http://127.0.0.1:5000/api/v1/questions',
         {
             'method': "GET",
             'headers':{
@@ -124,41 +127,7 @@
             })
         }
 
-        //function for getting a single question
-        let payload = localStorage.getItem('token');
-        function getSingleQuestion(Question_ID){
-
-            fetch('http://127.0.0.1:5000/api/v1/questions/' + Question_ID,
-            {
-                method: 'GET',
-                headers: {
-                    "Accept": "application/json, */*",
-                    "Content-type": "application/json",
-                    "Authorization": `Bearer ${payload}`
-                }
-            })
-            .then((response) => response.json())
-           .then((data) => {
-                let output = '<h2> Answers </h2>';
-                
-                    console.log(data)
-                })
-       }
-                
-                //answer.forEach(function (answers) {
-                // output += `
-                //     <ul>
-                // <li><a href="questions.html?question_id=${QuestionID}&answer_id=${AnswerID}">${answers.answer}(${answer.status})</a></li>
-                // </ul>
-                //`
-          
-            // localStorage.setItem("QuestionID", QuestionID);
-            // console.log(answer);
-            // document.getElementById('asked-qn').innerHTML = `<div class="asked-qn-heading">${data[0]}</div>`
-            // document.getElementById('answers-sector').innerHTML = output;
-            // }
-
-
+       
     </script>
     <footer>
         <p>&copy; StackOverflow</p>
