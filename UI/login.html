@@ -38,12 +38,13 @@
                             <input type="password" placeholder="**********" id="loginPassword" required>
                         </p>
                         <p>
-                            <input type="submit" value="LOGIN" formaction="index.html">
+                            <input type="submit" value="LOGIN">
                         </p>
                     </form>
                 </div>
             </div>
 <!-- Scripts for js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
 <script type="text/javascript">
     document.getElementById('signupForm').addEventListener('submit', signupForm);
     document.getElementById('loginForm').addEventListener('submit', loginForm);
@@ -67,23 +68,25 @@
         })
         .then((response) => response.json())
         .then((data) => { console.log(data)
-            if (data.message === "Created successfully") {
-                alert('Thank you for registering...');
+            if (data.message === "Created succesfully") {
+                swal('Thank you for registering...');
                 window.location.href = "login.html";
             } else if (data.message === "User not found. Please sign up") {
-                alert("Incorrect password or email");
-            } else if (data.message === "User already exists") {
-                alert("An account with this (" + email + ") email exists!")
+                swal("Incorrect password or email");
+            } else if (data.Message === "User already exists") {
+                swal("An account with this (" + email + ") email exists!")
             } else if (data.message === "This password is not strong enough") {
-                alert("Your password is too short")
+                swal("Your password is too short")
             } else {
-                alert(data.message)
+                swal(data.message)
             }
             
 
         })
     }
-        
+      
+
+   
 
 
     // function for login form
@@ -97,7 +100,7 @@
         {
             method: 'POST',
             headers: {
-                'Accept': 'application/json',
+                'Accept': 'application/json, text/plain',
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({email,password})
@@ -108,12 +111,12 @@
                         token = data.token;
                         console.log(token);
                         localStorage.setItem('token', token)
-                        if (data.message === "User not found.Please sign up") {
-                            alert("Incorrect password or email");
-                            window.location.replace("login.html")}
-                        else if(data.message === "user successful logged in"){
-                            alert("sucessfully logged in");
-                            window.location.replace("index.html")
+                        if (data.message === "user successful logged in"){
+                            swal("sucessfully logged in");
+                            window.location.replace("index.html")   
+                        } 
+                        else if (data.message === "User not found.Please sign up") {
+                            swal("Incorrect password or email");    
                         }
                         else {
                             (data.message)
