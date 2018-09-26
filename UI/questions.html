@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="StackOverflow-lite is a web based platform where developers can ask questions and they are answered">
     <meta http-equiv="X-UA-Compatible">
     <link rel="stylesheet" href="asserts/main.css">
     <title>StackOverflow</title>
@@ -14,7 +15,7 @@
 <body>
     <header>
         <h2>Stack Overflow-lite</h2>
-        <input type="text" placeholder="Search..">
+        
     </header>
 
     <section>
@@ -24,10 +25,10 @@
                     <a href="index.html">Home</a>
                 </li>
                 <li>
-                    <a href="questions.html">Profile</a>
+                    <a href="questions.html">Questions</a>
                 </li>
                 <li>
-                    <a href="signup.html">Logout</a>
+                    <a href="login.html">Logout</a>
                 </li>
 
             </ul>
@@ -36,7 +37,6 @@
 
         <article>
             <h1> My Questions</h1>
-            <input type="text" placeholder="Search..">
         <div class="questions">
                 <div class="qtn-field">
                     <div class="qtn-asked">
@@ -46,25 +46,8 @@
                 </div>
         </div>
         </article>
-        <div class="seconddiv">
-            <div class="innerdiv">
-                <h2>Profile</h2>
-                <hr>
-                <img src="asserts/index.jpeg" alt="Profile Picture">
-                <p><a href="#">Add profile credential</a></p>
-                <p><a href="#">Write a description about yourself</a> </p>
-                <p>Followers: 34</p>
-                <hr>
-                <p><a href="#">Questions (39)</a></p>
-                <hr>
-                <p><a href="#" id="answerz">Answers (17)</a></p>
-                <hr>
-                <p>Votes (20)</p>
-                <hr>
-                <p>Approved Answers (7)</p>
-            </div>
-        </div>
     </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
      <script type="text/javascript">
      fetch('http://127.0.0.1:5000/api/v1/questions')
                  .then((response) => response.json())
@@ -87,6 +70,7 @@
 
                     });
 
+
                     document.getElementById('outputs').innerHTML = outputs;
                     })
 
@@ -95,7 +79,7 @@
         let payload = localStorage.getItem('token'); 
 
         function getSingleQuestion(Question_ID){
-            console.log('this is baddd');
+        ;
 
         fetch("http://127.0.0.1:5000/api/v1/questions/" + Question_ID,
         {
@@ -109,14 +93,15 @@
        .then((response) => response.json())
        .then((data) => {
                 console.log(data)
-                alert('Wanna answer this question?')
+                swal('Wanna answer this question?')
                 window.location.href="answers.html"
                 })
                 localStorage.setItem("Question_ID", Question_ID);       
     }
 
     // function for deletea question
-        // let payload = localStorage.getItem('token'); 
+           
+    
      function deleteQuestion(Question_ID){
             console.log('this is delete');
         fetch("http://127.0.0.1:5000/api/v1/questions/" + Question_ID,
@@ -131,7 +116,7 @@
        .then((response) => response.json())
        .then((data) => {
                 console.log(data)
-                alert('Are you sure you want to delete')
+                swal("hey","Are you sure you want to delete","Warning");
                 window.location.reload()
                 })
                        
