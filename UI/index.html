@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="StackOverflow-lite is a web based platform where developers can ask questions and they are answered">
     <meta http-equiv="X-UA-Compatible">
     <link rel="stylesheet" href="asserts/main.css">
     <title>StackOverflow</title>
@@ -14,7 +15,6 @@
 <body>
     <header>
         <h2>Stack Overflow-lite</h2>
-        <input type="text" placeholder="Search..">
     </header>
 
     <section>
@@ -24,7 +24,7 @@
                     <a href="index.html">Home</a>
                 </li>
                 <li>
-                    <a href="questions.html">Profile</a>
+                    <a href="questions.html">Questions</a>
                 </li>
                 <li>
                     <a href="login.html">Logout</a>
@@ -54,6 +54,7 @@
                 <div id="output" class="innerdiv"> </div>
             </div>
     </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
     <script>
         document.getElementById('getQuestions').addEventListener('click', getQuestions);
         document.getElementById('askQuestion').addEventListener('submit', askQuestion);
@@ -116,14 +117,14 @@
             .then((response) => response.json())
             .then((data) => {console.log(data)
                 if (data.message === "Created succesfully") {
-                    alert('question created succesfully');
+                    swal('question created succesfully');
                     window.location.href = 'questions.html'
                     }
                 else if(data.message === "Question already exists"){
-                    alert("Sorry question already asked");
+                    swal("Sorry question already asked");
                 }
 
-                else {alert(data.message)}
+                else {swal(data.message)}
             })
         }
 
