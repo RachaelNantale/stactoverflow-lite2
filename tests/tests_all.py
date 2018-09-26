@@ -67,7 +67,7 @@ class TestAll(BaseTest):
                              Authorization='Bearer ' + payload),
                          data=json.dumps(self.question))
 
-        res = self.client.get('api/v1/questions/1wq',
+        res = self.client.get('api/v1/questions/1',
                               content_type='application/json',
                               headers=dict(
                                   Authorization='Bearer ' + payload),)
@@ -82,7 +82,7 @@ class TestAll(BaseTest):
                              Authorization='Bearer ' + payload),
                          data=json.dumps(self.question))
 
-        res = self.client.get('api/v1/questions/1wq',
+        res = self.client.get('api/v1/questions/1',
                               content_type='application/json',
                               headers=dict(
                                   Authorization='Bearer ' + payload),)
