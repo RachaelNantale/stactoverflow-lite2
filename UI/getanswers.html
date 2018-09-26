@@ -72,12 +72,12 @@
                     let output = `<h2> Answers</h2>
                     <h3>Question: ${qtn}</h3>`;
            
-                    console.log('welage2');
+                    
                     for(i=0; i < answer.length; i++){
                         let myanswer = (answer[i]['answer'])
                         let Answer_ID = (answer[i]['Answer_ID'])
                         let status = (answer[i]["Status"])
-                        console.log('welage3');
+                        
 
 
                         output += `
@@ -88,7 +88,7 @@
                              `;
 
                     }
-                    //}
+                  
 
                     document.getElementById('ans-outputs').innerHTML = output;
                    })
@@ -120,16 +120,7 @@
                 let JsonData = JSON.stringify(data)
                 console.log(JsonData)
                 alert('Do you want to modify?');
-                //window.location.reload()
-                // if (data.message === "Created succesfully") {
-                //     swal('Answer created succesfully');
-                //     window.location.href='getanswers.html';
-                //     }
-                // else if(data.Message === "Answer already exists"){
-                //     swal("Sorry answer already given");
-                // }
-
-                // else {alert(data.message)}
+                
             })
             localStorage.setItem("Answer_ID", Answer_ID);
 
