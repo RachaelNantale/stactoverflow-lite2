@@ -73,7 +73,7 @@
                 window.location.href = "login.html";
             } else if (data.message === "User not found. Please sign up") {
                 swal("Incorrect password or email");
-            } else if (data.Message === "User already exists") {
+            } else if (data.message === "User already exists") {
                 swal("An account with this (" + email + ") email exists!")
             } else if (data.message === "This password is not strong enough") {
                 swal("Your password is too short")

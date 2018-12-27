@@ -40,8 +40,9 @@ class QuestionsList(Resource):
         # try:
         created_question = question.create_question()
         return created_question
+
         # except Exception:
-        #     return make_response(jsonify({'Message': 'An error occurred please try again'}), 400)
+        #     return make_response(jsonify({'message': 'An error occurred please try again'}), 400)
 
     def get(self):
         """Gets all questions"""

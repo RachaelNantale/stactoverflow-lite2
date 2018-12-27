@@ -36,7 +36,7 @@ class QuestionsModels:
 
         if db.check_item_exists(query):
             print(query)
-            return {'Message': 'Question already exists'}, 400
+            return {'message': 'Question already exists'}, 400
 
         validate = validate_question_input(self.title, self.description,
                                            self.tags)

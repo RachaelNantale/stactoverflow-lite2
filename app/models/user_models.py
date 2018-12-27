@@ -17,7 +17,7 @@ class UserModel():
         duplication"""
 
         if db.fetch_user_by_email(self.email):
-            return {'Message': 'User already exists'}, 400
+            return {'message': 'User already exists'}, 400
 
         validate = validate_user_input(self.email, self.password)
         if validate:

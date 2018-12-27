@@ -31,7 +31,7 @@ class AnswersModels:
     def create_answer(self):
         """This method checks if the answer exists before creating the answer"""
         if db.check_answer_exists(self.Question_ID, self.answer):
-            return {'Message': 'Answer already exists'}, 400
+            return {'message': 'Answer already exists'}, 400
 
         validate = validate_answer_input(self.answer)
         if validate:

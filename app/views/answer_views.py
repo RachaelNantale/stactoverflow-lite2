@@ -103,7 +103,7 @@ class Answers(Resource):
             return make_response(jsonify({"message": "Question doesnt exist"}), 400)
         except Exception as e:
             print(e)
-            return {'Message': 'Please check your Question or Answer '}, 404
+            return {'message': 'Please check your Question or Answer '}, 404
 
 
     
