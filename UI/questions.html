@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="StackOverflow-lite is a web based platform where developers can ask questions and they are answered">
+    <meta http-equiv="X-UA-Compatible">
+    <link rel="stylesheet" href="asserts/main.css">
+    <title>StackOverflow</title>
+
+
+</head>
+
+<body>
+    <header>
+        <h2>Stack Overflow-lite</h2>
+        
+    </header>
+
+    <section>
+        <nav>
+            <ul>
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+                <li>
+                    <a href="questions.html">Questions</a>
+                </li>
+                <li>
+                    <a href="login.html">Logout</a>
+                </li>
+
+            </ul>
+        </nav>
+
+
+        <article>
+            <h1> My Questions</h1>
+        <div class="questions">
+                <div class="qtn-field">
+                    <div class="qtn-asked">
+                        <div id="outputs"> </div>
+
+                    </div>
+                </div>
+        </div>
+        </article>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+     <script type="text/javascript">
+     fetch('http://127.0.0.1:5000/api/v1/questions')
+                 .then((response) => response.json())
+                 .then((data) => {
+                    let outputs = '<h2> Top Questions </h2>';
+                    data.message.forEach(function (questions) {
+                        console.log(questions)
+                        
+                        outputs += `
+                    <div>
+                     <h2  onclick="getSingleQuestion(${questions.Question_ID})">${questions.title}</h2>
+                   
+                    <p> Description: ${questions.description}</p>
+                    <p> Tags: ${questions.tags}</p>
+                    <a href="#" onclick="deleteQuestion(${questions.Question_ID})">Delete</a>
+                    <hr>
+                    
+                    </div>
+                        `;
+
+                    });
+
+
+                    document.getElementById('outputs').innerHTML = outputs;
+                    })
+
+   
+    //function for getting a single question
+        let payload = localStorage.getItem('token'); 
+
+        function getSingleQuestion(Question_ID){
+        ;
+
+        fetch("http://127.0.0.1:5000/api/v1/questions/" + Question_ID,
+        {
+            method: 'GET',
+            headers: {
+                "Accept": "application/json, */*",
+                "Content-type": "application/json",
+                "Authorization": `Bearer ${payload}`
+            }
+        })
+       .then((response) => response.json())
+       .then((data) => {
+                console.log(data)
+                swal('Wanna answer this question?')
+                window.location.href="answers.html"
+                })
+                localStorage.setItem("Question_ID", Question_ID);       
+    }
+
+    // function for deletea question
+           
+    
+     function deleteQuestion(Question_ID){
+            console.log('this is delete');
+        fetch("http://127.0.0.1:5000/api/v1/questions/" + Question_ID,
+        {
+            method: 'DELETE',
+            headers: {
+                "Accept": "application/json, */*",
+                "Content-type": "application/json",
+                "Authorization": `Bearer ${payload}`
+            }
+        })
+       .then((response) => response.json())
+       .then((data) => {
+                console.log(data)
+                swal("hey","Are you sure you want to delete","Warning");
+                // window.location.reload()
+                })
+                       
+    }
+
+    </script>
+
+
+    <footer>
+        <p>&copy; StackOverflow</p>
+    
+
+    </footer>
+
+</body>
+
+</html>

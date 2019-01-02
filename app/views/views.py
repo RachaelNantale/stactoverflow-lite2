@@ -37,17 +37,18 @@ class QuestionsList(Resource):
         question = QuestionsModels(args['title'], args['description'],
                                    args['tags'], current_user)
 
-        try:
-            created_question = question.create_question()
-            return created_question
-        except Exception:
-            return make_response(jsonify({'Message': 'An error occurred please try again'}), 400)
+        # try:
+        created_question = question.create_question()
+        return created_question
+
+        # except Exception:
+        #     return make_response(jsonify({'message': 'An error occurred please try again'}), 400)
 
     def get(self):
         """Gets all questions"""
         questions = db.fetch_all_questions()
         if len(questions) == 0:
-            return {'message': 'Sorry no questions asked yet'}, 400
+            return jsonify({'message': 'Sorry no questions asked yet'}), 400
 
         return jsonify({'message': questions})
 
@@ -91,4 +92,4 @@ class Question(Resource):
 
 
 api.add_resource(QuestionsList, '/api/v1/questions')
-api.add_resource(Question, '/api/v1/questions/<string:Question_ID>')
+api.add_resource(Question, '/api/v1/questions/<int:Question_ID>')

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="StackOverflow-lite is a web based platform where developers can ask questions and they are answered">
+    <meta http-equiv="X-UA-Compatible">
+    <link rel="stylesheet" href="asserts/main.css">
+    <title>StackOverflow</title>
+
+
+</head>
+
+<body>
+    <header>
+        <h2>Stack Overflow-lite</h2>
+    </header>
+
+    <section>
+        <nav>
+            <ul>
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+                <li>
+                    <a href="questions.html">Questions</a>
+                </li>
+                <li>
+                    <a href="login.html">Logout</a>
+                </li>
+               
+
+            </ul>
+        </nav>
+                
+        <article>
+        <button id="getQuestions" class="btn-1">Top Questions</button>
+            <h1>Ask A Question</h1>
+            <form id="askQuestion">
+        <label>Title</label><br>
+        <input type="text" class="input-fields" placeholder="What's your programming question. Be specific" id="title"><br><br>
+        <label>Body</label><br>
+        <textarea rows="7" cols="14" id="description"></textarea><br><br>
+        <label>Tags</label><br>
+        <input type="text" class="input-fields" placeholder="Atleast one tag" id="tags"><br><br>
+        <button type="submit" class="btn" formaction="questions.html">Post Your Question </button>
+
+        
+    </form>
+    </article>
+
+        <div class="seconddiv">
+                <div id="output" class="innerdiv"> </div>
+            </div>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+    <script>
+        document.getElementById('getQuestions').addEventListener('click', getQuestions);
+        document.getElementById('askQuestion').addEventListener('submit', askQuestion);
+
+        function getQuestions() {
+            
+            fetch('http://127.0.0.1:5000/api/v1/questions')
+                 .then((response) => response.json())
+                 .then((data) => {
+                    
+
+                    let output = '<h2> Top Questions </h2>';
+                    data.message.forEach(function (questions) {
+                        output += `
+                    <div>
+                    <h3><a href='#'> Title: ${questions.title}</a><h3>
+                    <p> Description: ${questions.description}</p>
+                    <p> Tags: ${questions.tags}</p>
+                    <p> Tags: ${questions.current_user}</p>
+                    <hr>
+                    
+                    </div>
+                        `;
+                    });
+                    document.getElementById('output').innerHTML = output;
+                    
+               });
+        }
+
+        
+        fetch('http://127.0.0.1:5000/api/v1/questions',
+        {
+            'method': "GET",
+            'headers':{
+            'Accept':"application/json, */*", 
+            'content-type':"application/json"
+            }
+        })
+        .then (response =>response.json())
+        .then (data => {console.log(data)})
+
+        function askQuestion(e){
+            e.preventDefault();
+            let title = document.getElementById('title').value;
+            let description = document.getElementById('description').value;
+            let tags = document.getElementById('tags').value;
+            let payload = localStorage.getItem('token');
+           
+    
+            fetch('http://127.0.0.1:5000/api/v1/questions',
+            {
+                method: 'POST',
+                headers: {
+                    "Accept": "application/json, */*",
+                    "Content-type": "application/json",
+                    "Authorization": `Bearer ${payload}`
+                },
+                body: JSON.stringify({title:title, description:description, tags:tags})
+            })
+            .then((response) => response.json())
+            .then((data) => {console.log(data)
+                if (data.message === "Created succesfully") {
+                    swal('question created succesfully');
+                    window.location.href = 'questions.html'
+                    }
+                else if(data.message === "Question already exists"){
+                    swal("Sorry question already asked");
+                }
+
+                else {swal(data.message)}
+            })
+        }
+
+       
+    </script>
+    <footer>
+        <p>&copy; StackOverflow</p>
+    </footer>
+
+</body>
+
+</html>

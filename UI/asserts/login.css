@@ -1,0 +1,158 @@
+.container {
+    width:100%;
+    font-family: "Myriad Pro","Helvetica Neue",Helvetica,Arial,Sans-Serif;
+
+}
+h1 {
+    text-align: center;
+}
+.form {
+    width:50%;
+    height:300px;
+    float:left;
+    color: black;
+    background-color: #FFF8DC;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.form1 {
+    background:#ccc;
+}
+
+.form2 {
+    background:#999;
+}
+.form .form_label {
+    margin:15px;
+    margin-bottom:30px;
+    font-size:25px;
+    font-weight:bold;
+    color:black;
+    text-decoration:underline;
+    }
+
+.form input[type="text"],input[type="password"],input[type="email"]  {
+    width:230px;
+    height:40px;
+    border-radius:2px;
+    font-size:17px;
+    padding-left:5px;
+    border:none;
+    }
+.form input[type="submit"] {
+    width:230px;
+    height:40px;
+    border:none;
+    border-radius:2px;
+    font-size:17px;
+    background-color:#7F8C8D;
+    border-bottom:3px solid #616A6B;
+    color:rgba(0, 0, 0, 0.897);
+    font-weight:bold;
+    }
+
+footer {
+    background-color: darkcyan;
+    padding: 0;
+    color: white;
+    height: 10%;
+    /* padding: 0 15px; */
+    box-sizing: content-box;
+    /* flex-flow: row nowrap; */
+    /* align-items: center; */
+    text-align: center;
+    float: left;
+    display: block;
+    width: 100%;
+}
+/* media queries for normal screen  */
+@media only screen and (min-width:700px) and (max-width:995px) {
+    .container {
+    width:100%;
+    }
+    .container h1 {
+    font-size:30px;
+    }
+    .form {
+    width:50%;
+    margin-left:25%;
+    padding-left:0px;
+    padding-right:0px;
+    }
+    .form input[type="text"],input[type="password"], input[type="email"] {
+    width:80%;
+    }
+    
+    .form input[type="submit"] {
+    width:80%;
+    }
+    }
+    /* Media queries for medium sized */
+    @media only screen and (min-width:900px) and (max-width:1024px) {
+    .container {
+    width:100%;
+    }
+    .container h1 {
+    font-size:30px;
+    }
+    .form {
+    width:50%;
+    margin-left:25%;
+    padding-left:0px;
+    padding-right:0px;
+    }
+    .form input[type="text"],input[type="password"], input[type="email"] {
+    width:80%;
+    }
+    
+    .form input[type="submit"] {
+    width:80%;
+    }
+    .footer {
+        height:  100%;
+    }
+    }
+    /* media queries for small screen */
+    @media only screen and (min-width:400px) and (max-width:699px) {
+    .container {
+    width:100%;
+    }
+    .container h1 {
+    font-size:30px;
+    }
+    .form {
+    width:60%;
+    margin-left:20%;
+    }
+    .form input[type="text"],input[type="password"] {
+    width:80%;
+    }
+    .form input[type="submit"] {
+    width:80%;
+    }
+    }
+    
+    @media only screen and (min-width:100px) and (max-width:399px) {
+    .container {
+    width:100%;
+    }
+    .container h1 {
+    font-size:25px;
+    }
+    .form {
+    width:90%;
+    margin-left:5%;
+    padding-left:0px;
+    padding-right:0px;
+    }
+    .form input[type="text"],input[type="password"] {
+    width:80%;
+    }
+    .form input[type="submit"] {
+    width:80%;
+    }
+    .footer {
+        width: 100%
+    }
+    }

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="StackOverflow-lite is a web based platform where developers can ask questions and they are answered">
+    <meta http-equiv="X-UA-Compatible">
+    <link rel="stylesheet" href="asserts/main.css">
+    <title>StackOverflow</title>
+
+
+</head>
+
+<body>
+    <header>
+        <h2>Stack Overflow-lite</h2>
+        
+
+    </header>
+
+    <section>
+        <nav>
+            <ul>
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
+                <li>
+                    <a href="questions.html">Questions</a>
+                </li>
+                <li>
+                    <a href="signup.html">Logout</a>
+                </li>
+
+            </ul>
+        </nav>
+
+
+        <article>
+            <h1> My Answers</h1>
+            <a href="questions.html"> <== Back to Questions</a>
+        <div class="questions">
+                <div class="qtn-field">
+                    <div class="qtn-asked">
+                        <div id="ans-outputs"></div>
+                         <form id="editAnswer">
+                    <textarea id="edit-answer">Please add your answer here </textarea>
+
+                    <button class="btn-1" id="btn-2-submit" formaction="#">Submit</button>
+                </form>
+                </div>
+        </div>
+        </article>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+        <script type="text/javascript">
+        let payload = localStorage.getItem('token');
+     fetch(`http://127.0.0.1:5000/api/v1/questions/${localStorage.getItem("Question_ID")}/answers`,
+         {
+            method: 'GET',
+            headers: {
+                "Accept": "application/json, */*",
+                "Content-type": "application/json",
+                "Authorization":`Bearer ${payload}`
+                
+            }
+        })
+                 .then((response) => response.json()) 
+                 .then((data) => {
+                    let answer = data["message"][0]['answers'];
+                    let qtn = data['message'][0]['title'];
+                    
+                    let output = `<h2> Answers</h2>
+                    <h3>Question: ${qtn}</h3>`;
+           
+                    
+                    for(i=0; i < answer.length; i++){
+                        let myanswer = (answer[i]['answer'])
+                        let Answer_ID = (answer[i]['Answer_ID'])
+                        let status = (answer[i]["Status"])
+                        
+
+
+                        output += `
+                             <p onclick="getSingleAnswer(${Answer_ID})">Answer: ${myanswer}</p>
+                            <p onclick="markAsPreferred(${Answer_ID})">Status: ${status}</p>
+                            <hr>
+                             
+                             `;
+
+                    }
+                  
+
+                    document.getElementById('ans-outputs').innerHTML = output;
+                   })
+                    
+    document.getElementById('editAnswer').addEventListener('submit', getSingleAnswer);                
+    function getSingleAnswer(Answer_ID){
+            
+            let answer = document.getElementById('edit-answer').value;
+            let payload = localStorage.getItem('token');
+            let Question_ID = localStorage.getItem('Question_ID');
+            console.log(Question_ID)
+
+            
+    
+            fetch(`http://127.0.0.1:5000/api/v1/questions/${localStorage.getItem("Question_ID")}/answers/${localStorage.getItem("Answer_ID")}`,
+            {
+
+                method: 'PUT',
+                headers: {
+                    "Accept": "application/json, */*",
+                    "Content-type": "application/json",
+                    "Authorization": `Bearer ${payload}`,
+                    "mode":"CORS"
+                },
+                body: JSON.stringify({answer:answer})
+            })
+            .then((response) => response.json())
+            .then((data) => {console.log(data)
+                let JsonData = JSON.stringify(data)
+                console.log(JsonData)
+                alert('Do you want to modify?');
+                
+            })
+            localStorage.setItem("Answer_ID", Answer_ID);
+
+            }
+
+</script>
+</body>
+</html>

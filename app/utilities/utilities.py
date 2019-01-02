@@ -23,7 +23,7 @@ def validate_question_input(title, description, tags):
         return {'message': 'Please dont input symbols'}, 400
 
     if not tags or tags == "":
-        return {'message': 'Please a correct tag'}, 400
+        return {'message': 'Please add correct tag'}, 400
     if re.compile('[!@#$%^&*:;?><.]').match(tags):
         return {'message': 'Please dont input symbols'}, 400
 

@@ -17,7 +17,7 @@ class QuestionsModels:
     """
 
     def __init__(self, title, description, tags, asked_by):
-        self.Question_ID = uuid.uuid4().hex
+        # self.Question_ID = 0
         self.title = title.strip(" ")
         self.description = description.strip(" ")
         self.tags = tags.strip(" ")
@@ -36,15 +36,15 @@ class QuestionsModels:
 
         if db.check_item_exists(query):
             print(query)
-            return {'Message': 'Question already exists'}, 400
+            return {'message': 'Question already exists'}, 400
 
         validate = validate_question_input(self.title, self.description,
                                            self.tags)
         if validate:
             return validate
 
-        sql = "INSERT INTO QuestionTable values('{}','{}','{}','{}','{}','{}')".format(
-            self.Question_ID, self.title, self.description, self.tags,
+        sql = "INSERT INTO QuestionTable values('{}','{}','{}','{}','{}')".format(
+             self.title, self.description, self.tags,
             self.asked_by, self.time)
         return db.create_item(sql)
 

@@ -28,11 +28,11 @@ class AnswerList(Resource):
         logged_in_user = get_jwt_identity()
         my_answer = AnswersModels(args['answer'], Question_ID,
                                   logged_in_user)
-        try:
-            created_answer = my_answer.create_answer()
-            return created_answer
-        except Exception:
-            return {'message': 'An error occured.Please Make sure that the Question exists'}, 404
+        # try:
+        created_answer = my_answer.create_answer()
+        return created_answer
+        # except Exception:
+        #     return {'message': 'An error occured.Please Make sure that the Question exists'}, 404
 
     @jwt_required
     def get(self, Question_ID):
@@ -62,6 +62,7 @@ class Answers(Resource):
         current logged in user is the answer owner. 
         It also marks as preferred if the current logged in user 
         is the question  owner"""
+
         try:
 
             args = self.reqparse.parse_args()
@@ -69,16 +70,19 @@ class Answers(Resource):
             current_user = get_jwt_identity()
             user = db.fetch_user_by_email(email=current_user)
             logged_in_user = user[1]
-
+           
             answer_exists = db.fetch_answer_by_id(Answer_ID=Answer_ID)
+            
             question_exists = db.fetch_single_question_by_id(
                 Question_ID=Question_ID)
-
-            a_owner_email = db.fetch_answer_details(Question_ID, Answer_ID)[4]
+            
+            a_owner_email = db.fetch_answer_details(Question_ID, Answer_ID)[3]
+           
 
             qtn_details = db.fetch_single_question_by_id(
                 Question_ID=Question_ID)
-            qtn_details_email = qtn_details[4]
+            qtn_details_email = qtn_details[3]
+            
 
             if question_exists:
                 if answer_exists:
@@ -88,7 +92,7 @@ class Answers(Resource):
                             Answer_ID=Answer_ID)
                         updated_answer = db.fetch_answer_details(
                             Question_ID=Question_ID, Answer_ID=Answer_ID)
-
+                        
                     if logged_in_user == qtn_details_email:
                         db.accept_answer(Answer_ID=Answer_ID)
                         updated_answer = db.fetch_answer_details(
@@ -99,8 +103,10 @@ class Answers(Resource):
             return make_response(jsonify({"message": "Question doesnt exist"}), 400)
         except Exception as e:
             print(e)
-            return {'Message': 'Please check your Question or Answer '}, 404
+            return {'message': 'Please check your Question or Answer '}, 404
 
+
+    
 
 api.add_resource(AnswerList, '/api/v1/questions/<string:Question_ID>/answers')
 api.add_resource(
